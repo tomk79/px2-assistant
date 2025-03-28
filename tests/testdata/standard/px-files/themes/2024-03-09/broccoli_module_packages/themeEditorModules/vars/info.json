@@ -1,0 +1,11 @@
+{
+    "name":"Dynamic Elements",
+    "sort":[
+        "sitetitle",
+        "breadcrumb",
+        "h1",
+        "bowl",
+        "localnavigation"
+    ],
+    "deprecated": false
+}

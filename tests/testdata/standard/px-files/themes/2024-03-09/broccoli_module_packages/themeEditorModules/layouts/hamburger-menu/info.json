@@ -1,0 +1,9 @@
+{
+    "name": "Hamburger Menu",
+    "areaSizeDetection": "shallow",
+    "interface": {
+        "fields":{
+        },
+        "subModule": {}
+    }
+}

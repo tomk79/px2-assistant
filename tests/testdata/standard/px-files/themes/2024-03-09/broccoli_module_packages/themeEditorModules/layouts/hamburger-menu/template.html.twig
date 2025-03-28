@@ -1,0 +1,35 @@
+<div class="theme-hamburger-menu{% if _ENV.mode == 'canvas' %} theme-hamburger-menu--canvas-mode{% endif %}">
+	<div class="theme-hamburger-menu__open">
+		<button class="theme-hamburger-menu__open-btn">
+			<span class="theme-hamburger-menu__open-btn-inner">
+				<span class="theme-hamburger-menu__open-btn-decoration-a">{%
+					if _ENV.lang == "ja" %}メニュー{%
+					else %}Menu{%
+					endif %}</span>
+			</span>
+		</button>
+	</div>
+	<div class="theme-hamburger-menu__body">
+		<div class="theme-hamburger-menu__body-inner">
+{% if _ENV.mode == 'finalize' %}
+			<div class="theme-hamburger-menu__title">
+				<p><a href="<?= htmlspecialchars($px->href('')) ?>"><?= htmlspecialchars($px->conf()->name ?? '') ?></a></p>
+			</div>
+			<div class="theme-hamburger-menu__mega-menu">
+<?= $theme->mk_megafooter_menu() ?>
+			</div>
+			<div class="theme-hamburger-menu__shoulder-menu">
+<?php
+	$shoulder_menu = $px->site()->get_shoulder_menu();
+	echo( '<ul>' );
+	echo( '<li>'.$px->mk_link( '', array('current'=>false) ).'</li>' );
+	foreach( $shoulder_menu as $page_id ){
+		echo( '<li>'.$px->mk_link( $page_id ).'</li>' );
+	}
+	echo( '</ul>' );
+?>
+{% endif %}
+			</div>
+		</div>
+	</div>
+</div>

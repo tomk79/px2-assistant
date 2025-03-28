@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title><?= htmlspecialchars($px->site()->get_current_page_info('title_full') ?? ''); ?></title>
+		<meta name="description" content="<?= htmlspecialchars($px->site()->get_current_page_info('description') ?? ''); ?>" />
+		<meta name="keywords" content="<?= htmlspecialchars($px->site()->get_current_page_info('keywords') ?? ''); ?>" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+<?php include(__DIR__.'/inc/headsection.inc'); ?>
+<?= $px->bowl()->get_clean('head'); ?><link rel="stylesheet" href="<?= htmlspecialchars( $theme->files('/layouts/top/style.css') ) ?>" />
+
+
+	</head>
+	<body id="pagetop">
+<header class="theme-header">
+	<div class="theme-header__inner">
+		<div class="theme-header__si">
+			<h1><?= htmlspecialchars( $px->conf()->name ?? '' ) ?></h1>			<?php if( strlen($px->conf()->tagline ?? '') ){ ?><div class="theme-header__si-tagline"><?= htmlspecialchars( $px->conf()->tagline ?? '' ) ?></div><?php } ?>		</div>
+		<div class="theme-header__shouldernavi"><?php
+	$shoulder_menu = $px->site()->get_shoulder_menu();
+	if( is_array($shoulder_menu) && count($shoulder_menu) ){
+		echo( '<ul>' );
+		foreach( $shoulder_menu as $page_id ){
+			echo( '<li>'.$px->mk_link( $page_id ).'</li>' );
+		}
+		echo( '</ul>' );
+	}
+?>
+</div>
+
+		<div class="theme-header__globalnavi"><?php
+	$global_menu = $px->site()->get_global_menu();
+	if( is_array($global_menu) && count($global_menu) ){
+		echo( '<ul>'."\n" );
+		foreach( $global_menu as $page_id ){
+			echo( '<li>'.$px->mk_link( $page_id ).'</li>'."\n" );
+		}
+		echo( '</ul>'."\n" );
+	}
+?>
+</div>
+	</div>
+</header>
+<div class="theme-layouts ">
+	<div class="theme-layouts__body">
+		<div class="theme-layouts__content">
+
+<div class="contents" <?= htmlspecialchars($theme->get_attr_bowl_name_by() ?? '') ?>="">
+<?= $px->bowl()->pull('') ?>
+</div>
+<div class="theme-back-to-pagetop">
+	<p><a href="#pagetop"><?php
+		if ($px->lang() == "ja") { ?>このページの先頭へ戻る<?php
+		} else { ?>Back to page top<?php
+		} ?></a></p>
+</div>
+    	</div>
+	</div>
+</div>
+<footer class="theme-footer">
+	<div class="theme-footer__inner">
+		<nav class="theme-footer__megafooter-navi">
+<?= $theme->mk_megafooter_menu() ?>
+		</nav>
+
+		<div class="theme-footer__shouldernavi">
+<?php
+	$shoulder_menu = $px->site()->get_shoulder_menu();
+	if( is_array($shoulder_menu) && count($shoulder_menu) ){
+		echo( '<ul>'."\n" );
+		echo( '<li>'.$px->mk_link( '', array('current'=>false) ).'</li>'."\n" );
+		foreach( $shoulder_menu as $page_id ){
+			echo( '<li>'.$px->mk_link( $page_id ).'</li>'."\n" );
+		}
+		echo( '</ul>'."\n" );
+	}
+?>
+		</div>
+<?php if( strlen($px->conf()->copyright ?? '') ){ ?>
+<p style="text-align:center;">&copy;<?= htmlspecialchars($px->conf()->copyright ?? ''); ?>.</p>
+<?php } ?>
+
+	</div>
+</footer>
+<div class="theme-hamburger-menu">
+	<div class="theme-hamburger-menu__open">
+		<button class="theme-hamburger-menu__open-btn">
+			<span class="theme-hamburger-menu__open-btn-inner">
+				<span class="theme-hamburger-menu__open-btn-decoration-a">メニュー</span>
+			</span>
+		</button>
+	</div>
+	<div class="theme-hamburger-menu__body">
+		<div class="theme-hamburger-menu__body-inner">
+			<div class="theme-hamburger-menu__title">
+				<p><a href="<?= htmlspecialchars($px->href('')) ?>"><?= htmlspecialchars($px->conf()->name ?? '') ?></a></p>
+			</div>
+			<div class="theme-hamburger-menu__mega-menu">
+<?= $theme->mk_megafooter_menu() ?>
+			</div>
+			<div class="theme-hamburger-menu__shoulder-menu">
+<?php
+	$shoulder_menu = $px->site()->get_shoulder_menu();
+	echo( '<ul>' );
+	echo( '<li>'.$px->mk_link( '', array('current'=>false) ).'</li>' );
+	foreach( $shoulder_menu as $page_id ){
+		echo( '<li>'.$px->mk_link( $page_id ).'</li>' );
+	}
+	echo( '</ul>' );
+?>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="theme-back-to-pagetop-float">
+	<div class="theme-back-to-pagetop-float__inner">
+		<a href="#pagetop" class="theme-back-to-pagetop-float__back-to-top">
+			<span class="theme-back-to-pagetop-float__back-to-top-inner">
+				<span class="theme-back-to-pagetop-float__back-to-top-decoration-a"><?php
+					if ($px->lang() == "ja") { ?>このページの先頭へ戻る<?php
+					} else { ?>Back to page top<?php
+					} ?></span>
+			</span>
+		</a>
+	</div>
+</div>
+
+
+		<script src="<?= htmlspecialchars( $theme->files('/modules.js') ); ?>"></script>
+<?= $px->bowl()->get_clean('foot'); ?>
+
+<?php include(__DIR__.'/inc/footsection.inc'); ?>
+	</body>
+</html>

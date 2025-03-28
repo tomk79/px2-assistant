@@ -1,0 +1,21 @@
+<header class="theme-header">
+	<div class="theme-header__inner">
+		<div class="theme-header__si">
+			{% if sitetitle_htmlElement %}<{{ sitetitle_htmlElement }}>{% endif %}{% if sitetitle_linkto %}<a href="{% if _ENV.mode == 'canvas' %}#{% else %}<?= htmlspecialchars($px->href('{{ sitetitle_linkto }}')??'') ?>{% endif %}">{% endif %}{% if sitetitle_image %}<img src="{{ sitetitle_image }}" alt="" />{% endif %}{% if _ENV.mode == 'canvas' %}{%
+				if _ENV.lang == "ja" %}サイト名{%
+				else %}Site title{%
+				endif %}{% else %}<?= htmlspecialchars( $px->conf()->name ?? '' ) ?>{% endif %}{% if sitetitle_linkto %}</a>{% endif %}{% if sitetitle_htmlElement %}</{{ sitetitle_htmlElement }}>{% endif %}
+			{% if _ENV.mode == 'canvas' %}<div class="theme-header__si-tagline">{%
+				if _ENV.lang == "ja" %}サイトのキャッチコピー{%
+				else %}Tagline{%
+				endif %}</div>{% else %}<?php if( strlen($px->conf()->tagline ?? '') ){ ?><div class="theme-header__si-tagline"><?= htmlspecialchars( $px->conf()->tagline ?? '' ) ?></div><?php } ?>{% endif %}
+		</div>
+{% if shouldernavi %}
+		<div class="theme-header__shouldernavi">{{ shouldernavi }}</div>
+{% endif %}
+
+{% if globalnavi %}
+		<div class="theme-header__globalnavi">{{ globalnavi }}</div>
+{% endif %}
+	</div>
+</header>

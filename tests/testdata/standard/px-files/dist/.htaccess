@@ -1,0 +1,2 @@
+# ↓ *.html でも Paprika の処理を動作させたい場合に有効にする
+#AddHandler application/x-httpd-php .php .html

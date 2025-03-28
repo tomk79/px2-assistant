@@ -1,0 +1,25 @@
+{% if _ENV.mode == 'canvas' %}
+
+<div>
+<!-- == autoindex == -->
+<div class="px2-index-list">
+	<div class="px2-index-list__title">INDEX</div>
+	<ul>
+		<li><a href="javascript:;">ページ内リンク</a></li>
+		<li><a href="javascript:;">ページ内リンク</a>
+		<ul>
+			<li><a href="javascript:;">ページ内リンク</a></li>
+			<li><a href="javascript:;">ページ内リンク</a></li>
+		</ul>
+		</li>
+		<li><a href="javascript:;">ページ内リンク</a></li>
+	</ul>
+</div>
+<!-- / == autoindex == -->
+</div>
+
+{% else %}
+
+<!-- autoindex -->
+
+{% endif %}

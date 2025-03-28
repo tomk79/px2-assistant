@@ -1,0 +1,27 @@
+{% if _ENV.mode == 'canvas' %}
+<ul>
+{% if _ENV.lang == "ja" %}
+	<li><a href="javascript:;">ページ名</a></li>
+	<li><a href="javascript:;">ページ名</a></li>
+	<li><a href="javascript:;">ページ名</a></li>
+	<li><a href="javascript:;">ページ名</a></li>
+{% else %}
+	<li><a href="javascript:;">Page name</a></li>
+	<li><a href="javascript:;">Page name</a></li>
+	<li><a href="javascript:;">Page name</a></li>
+	<li><a href="javascript:;">Page name</a></li>
+{% endif %}
+</ul>
+{% endif %}
+{% if _ENV.mode == 'finalize' %}
+<?php
+	$global_menu = $px->site()->get_global_menu();
+	if( is_array($global_menu) && count($global_menu) ){
+		echo( '<ul>'."\n" );
+		foreach( $global_menu as $page_id ){
+			echo( '<li>'.$px->mk_link( $page_id ).'</li>'."\n" );
+		}
+		echo( '</ul>'."\n" );
+	}
+?>
+{% endif %}

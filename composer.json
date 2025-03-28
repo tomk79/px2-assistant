@@ -1,0 +1,57 @@
+{
+    "name": "tomk79/px2-assistant",
+    "description": "",
+    "keywords": ["pickles2"],
+    "license": "MIT",
+    "scripts":{
+		"start": [
+			"@php ./tests/testdata/standard/.px_execute.php \"/?PX=admin.serve&S=localhost:8080\""
+		],
+		"start-pub": [
+			"@php ./tests/testdata/standard/.px_execute.php \"/?PX=admin.serve.pub&S=localhost:8081\""
+		],
+        "test": [
+            "@php ./vendor/phpunit/phpunit/phpunit"
+        ]
+    },
+    "authors": [
+        {
+            "name": "Tomoya Koyanagi",
+            "email": "tomk79@gmail.com"
+        }
+    ],
+    "config": {
+        "process-timeout": 0
+    },
+    "minimum-stability": "dev",
+    "repositories": [
+    ],
+    "require": {
+        "php": ">=7.3.0",
+        "tomk79/request": "~1.0",
+        "tomk79/filesystem": "~1.0"
+    },
+    "require-dev": {
+        "pickles2/px-fw-2.x": "~2.0",
+		"pickles2/px2-clover": "~0.3",
+        "pickles2/px2-multitheme": "~2.0",
+        "pickles2/px2-path-resolver": "~2.0",
+        "pickles2/px2-px2dthelper": "~2.0",
+        "pickles2/px2-remove-attr": "~2.0",
+        "pickles2/px2-sitemapexcel": "~2.0",
+        "pickles2/px2-publish-ex": "~2.0",
+        "pickles2/px2style": "~3.0",
+        "phpunit/phpunit": "~9.5",
+		"vlucas/phpdotenv": "~5.4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "tomk79\\pickles2\\assistant\\": [
+                "php"
+            ],
+            "tomk79\\pickles2\\assistant\\cce\\": [
+                "cce/php"
+            ]
+        }
+    }
+}

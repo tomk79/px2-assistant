@@ -1,0 +1,271 @@
+.px2-float-media {
+	margin-top: 1em;
+	margin-bottom: 1em;
+	clear: both;
+	&::after{
+		content: " ";
+		display: block;
+		visibility: hidden;
+		height: 0.1px;
+		font-size: 0.1em;
+		line-height: 0;
+		clear: both;
+	}
+
+	&__r1of1 {
+		float: right;
+		width: 100%;
+		margin-bottom: 20px;
+	}
+	&__c1of1 {
+		float: none;
+		width: 100%;
+		margin-left: auto;
+		margin-right: auto;
+		margin-bottom: 20px;
+	}
+	&__l1of1 {
+		float: left;
+		width: 100%;
+		margin-bottom: 20px;
+	}
+
+	&__r2of3 {
+		float: right;
+		width: 66%;
+		margin-left: 20px;
+		margin-bottom: 20px;
+	}
+	&__c2of3 {
+		float: none;
+		width: 66%;
+		margin-left: auto;
+		margin-right: auto;
+		margin-bottom: 20px;
+	}
+	&__l2of3 {
+		float: left;
+		width: 66%;
+		margin-right: 20px;
+		margin-bottom: 20px;
+	}
+
+	&__r1of2 {
+		float: right;
+		width: 50%;
+		margin-left: 20px;
+		margin-bottom: 20px;
+	}
+	&__c1of2 {
+		float: none;
+		width: 50%;
+		margin-left: auto;
+		margin-right: auto;
+		margin-bottom: 20px;
+	}
+	&__l1of2 {
+		float: left;
+		width: 50%;
+		margin-right: 20px;
+		margin-bottom: 20px;
+	}
+
+	&__r1of3 {
+		float: right;
+		width: 33%;
+		margin-left: 20px;
+		margin-bottom: 20px;
+	}
+	&__c1of3 {
+		float: none;
+		width: 33%;
+		margin-left: auto;
+		margin-right: auto;
+		margin-bottom: 20px;
+	}
+	&__l1of3 {
+		float: left;
+		width: 33%;
+		margin-right: 20px;
+		margin-bottom: 20px;
+	}
+
+	&__r1of4 {
+		float: right;
+		width: 25%;
+		margin-left: 20px;
+		margin-bottom: 20px;
+	}
+	&__c1of4 {
+		float: none;
+		width: 25%;
+		margin-left: auto;
+		margin-right: auto;
+		margin-bottom: 20px;
+	}
+	&__l1of4 {
+		float: left;
+		width: 25%;
+		margin-right: 20px;
+		margin-bottom: 20px;
+	}
+
+	&__heading-l1of1 {
+		float: right;
+		width: 100%;
+	}
+	&__heading-l2of3 {
+		float: right;
+		width: calc(33% - 20px);
+	}
+	&__heading-l1of2 {
+		float: right;
+		width: calc(50% - 20px);
+	}
+	&__heading-l1of3 {
+		float: right;
+		width: calc(67% - 20px);
+	}
+	&__heading-l1of4 {
+		float: right;
+		width: calc(75% - 20px);
+	}
+
+	&__heading-c1of1 ,
+	&__heading-c2of3 ,
+	&__heading-c1of2 ,
+	&__heading-c1of3 ,
+	&__heading-c1of4 {
+		float: none;
+		clear: both;
+	}
+
+	&__heading-r1of1 {
+		float: left;
+		width: 100%;
+	}
+	&__heading-r2of3 {
+		float: left;
+		width: calc(33% - 20px);
+	}
+	&__heading-r1of2 {
+		float: left;
+		width: calc(50% - 20px);
+	}
+	&__heading-r1of3 {
+		float: left;
+		width: calc(67% - 20px);
+	}
+	&__heading-r1of4 {
+		float: left;
+		width: calc(75% - 20px);
+	}
+
+	&__l1of1 img,
+	&__l2of3 img,
+	&__l1of2 img,
+	&__l1of3 img,
+	&__l1of4 img,
+
+	&__c1of1 img,
+	&__c2of3 img,
+	&__c1of2 img,
+	&__c1of3 img,
+	&__c1of4 img,
+
+	&__r1of1 img,
+	&__r2of3 img,
+	&__r1of2 img,
+	&__r1of3 img,
+	&__r1of4 img {
+		width: 100%;
+		height: auto;
+	}
+	&__caption{
+		margin-top: 0.5em;
+	}
+	&__body {
+		min-width: 20%;
+		&-rect {
+			overflow: hidden;
+		}
+	}
+
+	@media all and (max-width: 768px) {
+		// "sm" on Bootstrap 4
+		&__heading-r1of3 ,
+		&__heading-c1of3 ,
+		&__heading-l1of3 ,
+		&__heading-r1of4 ,
+		&__heading-c1of4 ,
+		&__heading-l1of4 {
+			width: calc(50% - 20px);
+		}
+
+		&__r1of3 ,
+		&__c1of3 ,
+		&__l1of3 ,
+		&__r1of4 ,
+		&__c1of4 ,
+		&__l1of4 {
+			width: 50%;
+		}
+	}
+
+	@media all and (max-width: 544px) {
+		// "xs" on Bootstrap 4
+		&__heading-r2of3 ,
+		&__heading-c2of3 ,
+		&__heading-l2of3 ,
+
+		&__r2of3 ,
+		&__c2of3 ,
+		&__l2of3 {
+			float: none;
+			width: 100%;
+			margin-left: auto;
+			margin-right: auto;
+			margin-bottom: 20px;
+		}
+	}
+
+	@media all and (max-width: 440px) {
+		&__heading-l1of1 ,
+		&__heading-l2of3 ,
+		&__heading-l1of2 ,
+		&__heading-l1of3 ,
+		&__heading-l1of4 ,
+		&__heading-c1of1 ,
+		&__heading-c2of3 ,
+		&__heading-c1of2 ,
+		&__heading-c1of3 ,
+		&__heading-c1of4 ,
+		&__heading-r1of1 ,
+		&__heading-r2of3 ,
+		&__heading-r1of2 ,
+		&__heading-r1of3 ,
+		&__heading-r1of4 ,
+
+		&__r1of1 ,
+		&__c1of1 ,
+		&__l1of1 ,
+		&__r2of3 ,
+		&__c2of3 ,
+		&__l2of3 ,
+		&__r1of2 ,
+		&__c1of2 ,
+		&__l1of2 ,
+		&__r1of3 ,
+		&__c1of3 ,
+		&__l1of3 ,
+		&__r1of4 ,
+		&__c1of4 ,
+		&__l1of4 {
+			float: none;
+			width: 100%;
+			margin-left: auto;
+			margin-right: auto;
+			margin-bottom: 20px;
+		}
+	}
+}

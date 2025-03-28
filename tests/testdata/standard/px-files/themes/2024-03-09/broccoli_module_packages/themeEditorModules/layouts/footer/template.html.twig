@@ -1,0 +1,100 @@
+<footer class="theme-footer">
+	<div class="theme-footer__inner">
+		<nav class="theme-footer__megafooter-navi">
+{% if _ENV.mode == 'canvas' %}
+{% if _ENV.lang == "ja" %}
+<ul>
+<li><a href="javascript:;">ページ名</a><ul>
+<li><a href="javascript:;">ページ名</a></li>
+<li><a href="javascript:;">ページ名</a></li>
+<li><a href="javascript:;">ページ名</a></li>
+<li><a href="javascript:;">ページ名</a></li>
+<li><a href="javascript:;">ページ名</a></li>
+</ul>
+</li>
+<li><a href="javascript:;">ページ名</a><ul>
+<li><a href="javascript:;">ページ名</a></li>
+<li><a href="javascript:;">ページ名</a></li>
+<li><a href="javascript:;">ページ名</a></li>
+<li><a href="javascript:;">ページ名</a></li>
+<li><a href="javascript:;">ページ名</a></li>
+<li><a href="javascript:;">ページ名</a></li>
+</ul>
+</li>
+<li><a href="javascript:;">ページ名</a><ul>
+<li><a href="javascript:;">ページ名</a></li>
+<li><a href="javascript:;">ページ名</a></li>
+<li><a href="javascript:;">ページ名</a></li>
+<li><a href="javascript:;">ページ名</a></li>
+<li><a href="javascript:;">ページ名</a></li>
+<li><a href="javascript:;">ページ名</a></li>
+</ul>
+</li>
+</ul>
+{% else %}
+<ul>
+<li><a href="javascript:;">Page name</a><ul>
+<li><a href="javascript:;">Page name</a></li>
+<li><a href="javascript:;">Page name</a></li>
+<li><a href="javascript:;">Page name</a></li>
+<li><a href="javascript:;">Page name</a></li>
+<li><a href="javascript:;">Page name</a></li>
+</ul>
+</li>
+<li><a href="javascript:;">Page name</a><ul>
+<li><a href="javascript:;">Page name</a></li>
+<li><a href="javascript:;">Page name</a></li>
+<li><a href="javascript:;">Page name</a></li>
+<li><a href="javascript:;">Page name</a></li>
+<li><a href="javascript:;">Page name</a></li>
+<li><a href="javascript:;">Page name</a></li>
+</ul>
+</li>
+<li><a href="javascript:;">Page name</a><ul>
+<li><a href="javascript:;">Page name</a></li>
+<li><a href="javascript:;">Page name</a></li>
+<li><a href="javascript:;">Page name</a></li>
+<li><a href="javascript:;">Page name</a></li>
+<li><a href="javascript:;">Page name</a></li>
+<li><a href="javascript:;">Page name</a></li>
+</ul>
+</li>
+</ul>
+{% endif %}
+{% endif %}
+{% if _ENV.mode == 'finalize' %}
+<?= $theme->mk_megafooter_menu() ?>
+{% endif %}
+		</nav>
+
+		<div class="theme-footer__shouldernavi">
+{% if _ENV.mode == 'canvas' %}
+<ul>
+{% if _ENV.lang == "ja" %}
+	<li><a href="javascript:;">ページ名</a></li>
+	<li><a href="javascript:;">ページ名</a></li>
+{% else %}
+	<li><a href="javascript:;">Page name</a></li>
+	<li><a href="javascript:;">Page name</a></li>
+{% endif %}
+</ul>
+{% endif %}
+{% if _ENV.mode == 'finalize' %}
+<?php
+	$shoulder_menu = $px->site()->get_shoulder_menu();
+	if( is_array($shoulder_menu) && count($shoulder_menu) ){
+		echo( '<ul>'."\n" );
+		echo( '<li>'.$px->mk_link( '', array('current'=>false) ).'</li>'."\n" );
+		foreach( $shoulder_menu as $page_id ){
+			echo( '<li>'.$px->mk_link( $page_id ).'</li>'."\n" );
+		}
+		echo( '</ul>'."\n" );
+	}
+?>
+{% endif %}
+		</div>
+{% if content %}
+{{ content }}
+{% endif %}
+	</div>
+</footer>

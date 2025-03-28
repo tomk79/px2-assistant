@@ -1,0 +1,32 @@
+{
+    "data": [
+        {
+            "modId": ":grids/grid",
+            "fields": {
+                "col": [
+                    {
+                        "modId": ":grids/grid",
+                        "fields": {
+                            "column-width": "1of2",
+                            "main": []
+                        },
+                        "subModName": "col",
+                        "anchor": "",
+                        "dec": ""
+                    },
+                    {
+                        "modId": ":grids/grid",
+                        "fields": {
+                            "column-width": "1of2",
+                            "main": []
+                        },
+                        "subModName": "col",
+                        "anchor": "",
+                        "dec": ""
+                    }
+                ]
+            }
+        }
+    ],
+    "resources": {}
+}

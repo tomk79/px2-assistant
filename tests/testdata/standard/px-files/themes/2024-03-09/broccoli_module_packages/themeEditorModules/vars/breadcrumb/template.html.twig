@@ -1,0 +1,9 @@
+{% if _ENV.mode == 'canvas' %}
+<div class="theme-breadcrumb">{%
+    if _ENV.lang == "ja" %}<ul><li><a href="/">ホーム</a></li><li><strong>パンくず</strong></li></ul>{%
+    else %}<ul><li><a href="/">Home</a></li><li><strong>Topic</strong></li></ul>{%
+    endif %}</div>
+{% endif %}
+{% if _ENV.mode == 'finalize' %}
+<div class="theme-breadcrumb"><?= $theme->mk_breadcrumb() ?></div>
+{% endif %}

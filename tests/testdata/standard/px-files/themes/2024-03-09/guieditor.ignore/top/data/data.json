@@ -1,0 +1,79 @@
+{
+    "bowl": {
+        "main": {
+            "modId": "_sys/root",
+            "fields": {
+                "main": [
+                    {
+                        "modId": "themeEditorModules:layouts/header",
+                        "fields": {
+                            "sitetitle_linkto": {
+                                "src": ""
+                            },
+                            "sitetitle_htmlElement": {
+                                "src": "h1"
+                            },
+                            "sitetitle_image": {
+                                "resKey": "",
+                                "resType": "none",
+                                "webUrl": "",
+                                "path": ""
+                            },
+                            "shouldernavi": [
+                                {
+                                    "modId": "themeEditorModules:vars/shouldernavi",
+                                    "fields": []
+                                }
+                            ],
+                            "globalnavi": [
+                                {
+                                    "modId": "themeEditorModules:vars/globalnavi",
+                                    "fields": []
+                                }
+                            ]
+                        },
+                        "anchor": "",
+                        "dec": ""
+                    },
+                    {
+                        "modId": "themeEditorModules:layouts/fullcolumn",
+                        "fields": {
+                            "inner-width": "",
+                            "main": [
+                                {
+                                    "modId": "themeEditorModules:vars/bowl",
+                                    "fields": {
+                                        "bowlName": ""
+                                    }
+                                },
+                                {
+                                    "modId": "themeEditorModules:layouts/backtopagetop",
+                                    "fields": []
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "modId": "themeEditorModules:layouts/footer",
+                        "fields": {
+                            "content": [
+                                {
+                                    "modId": "themeEditorModules:vars/copyright",
+                                    "fields": []
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "modId": "themeEditorModules:layouts/hamburger-menu",
+                        "fields": []
+                    },
+                    {
+                        "modId": "themeEditorModules:layouts/backtopagetop-float",
+                        "fields": []
+                    }
+                ]
+            }
+        }
+    }
+}

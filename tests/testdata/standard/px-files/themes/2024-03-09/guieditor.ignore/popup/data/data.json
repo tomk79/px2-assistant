@@ -1,0 +1,68 @@
+{
+    "bowl": {
+        "main": {
+            "modId": "_sys/root",
+            "fields": {
+                "main": [
+                    {
+                        "modId": "themeEditorModules:layouts/header",
+                        "fields": {
+                            "sitetitle_linkto": "",
+                            "sitetitle_htmlElement": "",
+                            "shouldernavi": [],
+                            "globalnavi": [],
+                            "sitetitle_image": {
+                                "resKey": "",
+                                "resType": "none",
+                                "webUrl": "",
+                                "path": ""
+                            }
+                        },
+                        "anchor": "",
+                        "dec": ""
+                    },
+                    {
+                        "modId": "themeEditorModules:layouts/fullcolumn",
+                        "fields": {
+                            "main": [
+                                {
+                                    "modId": "themeEditorModules:vars/h1",
+                                    "fields": [],
+                                    "anchor": "",
+                                    "dec": ""
+                                },
+                                {
+                                    "modId": "themeEditorModules:vars/bowl",
+                                    "fields": {
+                                        "bowlName": ""
+                                    }
+                                },
+                                {
+                                    "modId": "themeEditorModules:layouts/backtopagetop",
+                                    "fields": [],
+                                    "anchor": "",
+                                    "dec": ""
+                                }
+                            ],
+                            "inner-width": "theme-layouts--fullcolumn"
+                        },
+                        "anchor": "",
+                        "dec": ""
+                    },
+                    {
+                        "modId": "themeEditorModules:basics/close_button",
+                        "fields": [],
+                        "anchor": "",
+                        "dec": ""
+                    },
+                    {
+                        "modId": "themeEditorModules:vars/copyright",
+                        "fields": [],
+                        "anchor": "",
+                        "dec": ""
+                    }
+                ]
+            }
+        }
+    }
+}

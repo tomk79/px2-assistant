@@ -1,0 +1,9 @@
+{% if htmlElement %}<{{ htmlElement }}>{% endif %}
+{% if linkto %}<a href="{{ linkto }}">{% endif %}
+{% if _ENV.mode == 'canvas' %}{%
+    if _ENV.lang == "ja" %}サイトのタイトル{%
+    else %}Site title{%
+    endif %}{% endif %}
+{% if _ENV.mode == 'finalize' %}<?= htmlspecialchars( $px->conf()->name ?? '' ); ?>{% endif %}
+{% if linkto %}</a>{% endif %}
+{% if htmlElement %}</{{ htmlElement }}>{% endif %}

@@ -1,0 +1,29 @@
+.px2-embedded-media{
+	margin: 0 0 1em 0;
+
+	&__image-media {
+		img {
+			display: block;
+			width: 100%;
+			height: auto;
+		}
+	}
+
+	&--framed {
+		box-sizing: border-box;
+		padding: 8px;
+		background-color: #f9f9f9;
+	}
+
+	&__caption {
+		margin-top: 0.5em;
+		*{
+			margin-top: 0;
+			margin-bottom: 0;
+		}
+	}
+
+	&--imagescope img {
+		cursor: pointer;
+	}
+}

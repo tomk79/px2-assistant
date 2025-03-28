@@ -1,0 +1,24 @@
+.px2-index-list {
+    margin: 2em 5%;
+    border: 1px solid #bbb6;
+    padding: 1em;
+    background: rgba(124, 124, 124, 0.05);
+    border-radius: 5px;
+
+    &__title {
+        margin: 0;
+        padding: 0;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    ul {
+        margin: 0;
+        padding: 0 0 0 2em;
+
+        li {
+            display: list-item;
+            list-style-type: disc;
+        }
+    }
+}

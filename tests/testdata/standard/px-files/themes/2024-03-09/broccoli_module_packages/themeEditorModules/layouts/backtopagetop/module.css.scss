@@ -1,0 +1,22 @@
+/**
+ * Back to PageTop
+ */
+.theme-back-to-pagetop {
+	text-align: right;
+	a {
+		position: relative;
+		&::before {
+			content: "";
+			position: relative;
+			top: 0.1em;
+			left: 0;
+			display: inline-block;
+			border-top: 2px solid var(--theme-keycolor, #000);
+			border-left: 2px solid var(--theme-keycolor, #000);
+			width: .6em;
+			height: .6em;
+			transform: rotate(45deg);
+			margin-right: 0.4em;
+		}
+	}
+}

@@ -1,0 +1,12 @@
+{% if _ENV.mode == 'canvas' %}
+<div class="theme-update-date"><p>{%
+    if _ENV.lang == "ja" %}更新日{%
+    else %}Update date{%
+    endif %}: 20XX-XX-XX</p></div>
+{% endif %}
+{% if _ENV.mode == 'finalize' %}
+<div class="theme-update-date"><p><?php
+    if ($px->lang() == "ja") { ?>更新日<?php 
+    } else { ?>Update date<?php
+    } ?>: <?= htmlspecialchars( $px->site()->get_current_page_info('update_date') ?? '---' ); ?></p></div>
+{% endif %}

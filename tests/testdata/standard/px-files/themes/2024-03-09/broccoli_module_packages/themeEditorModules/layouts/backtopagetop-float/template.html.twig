@@ -1,0 +1,12 @@
+<div class="theme-back-to-pagetop-float{% if _ENV.mode == 'canvas' %} theme-back-to-pagetop-float--canvas-mode{% endif %}">
+	<div class="theme-back-to-pagetop-float__inner">
+		<a href="#pagetop" class="theme-back-to-pagetop-float__back-to-top">
+			<span class="theme-back-to-pagetop-float__back-to-top-inner">
+				<span class="theme-back-to-pagetop-float__back-to-top-decoration-a"><?php
+					if ($px->lang() == "ja") { ?>このページの先頭へ戻る<?php
+					} else { ?>Back to page top<?php
+					} ?></span>
+			</span>
+		</a>
+	</div>
+</div>
