@@ -18,10 +18,25 @@ mix
 				{
 					test: /\.txt$/i,
 					use: ['raw-loader'],
+				},
+				{
+					test: /\.(jsx|tsx)$/,
+					exclude: /node_modules/,
+					use: {
+						loader: 'babel-loader',
+						options: {
+							presets: [
+								'@babel/preset-env',
+								'@babel/preset-react',
+								'@babel/preset-typescript', // Ensure TypeScript support for .tsx
+							]
+						}
+					}
 				}
 			]
 		},
 		resolve: {
+			extensions: ['.js', '.jsx', '.ts', '.tsx'], // Add support for JSX/TSX extensions
 			fallback: {
 				"fs": false,
 				"path": false,
