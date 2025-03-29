@@ -18,28 +18,28 @@ const Chat = React.memo((props) => {
 
 	return (
 		<>
-			<div className="chat-ui">
-				<div className="chat-messages">
+			<div className="cce-assistant-chat">
+				<div className="cce-assistant-chat__messages">
 					{localState.log.length > 0 ? (
 						localState.log.map((message, index) => (
-							<div key={index} className={`chat-message ${message.isUser ? 'user-message' : 'assistant-message'}`}>
-								<div className="message-avatar">
-									{message.isUser ? '👤' : '🤖'}
+							<div key={index} className={`cce-assistant-chat__message ${message.isBot ? 'cce-assistant-chat__message--user' : 'cce-assistant-chat__message--assistant'}`}>
+								<div className="cce-assistant-chat__message-avatar">
+									{message.isBot ? '🤖' : '👤'}
 								</div>
-								<div className="message-content">
+								<div className="cce-assistant-chat__message-content">
 									<p>{message.text}</p>
-									<span className="message-time">{message.timestamp}</span>
+									<span className="cce-assistant-chat__message-time">{message.timestamp}</span>
 								</div>
 							</div>
 						))
 					) : (
-						<div className="empty-chat">
+						<div className="cce-assistant-chat__empty-chat">
 							<p>まだメッセージはありません。何か質問してみましょう！</p>
 						</div>
 					)}
 				</div>
 
-				<div className="chat-input">
+				<div className="cce-assistant-chat__input">
 					<form onSubmit={(e) => {
 						e.preventDefault();
 						const inputElement = chatInputRef.current;
@@ -50,8 +50,8 @@ const Chat = React.memo((props) => {
 						if (userMessage) {
 							const newMessage = {
 								text: userMessage,
-								isUser: true,
-								timestamp: new Date().toLocaleTimeString()
+								isBot: false,
+								timestamp: new Date().toLocaleTimeString(),
 							};
 
 							setLocalState(prevState => ({
@@ -67,12 +67,25 @@ const Chat = React.memo((props) => {
 
 							props.cceAgent.gpi({
 								'command': 'chat-comment',
-								'message': userMessage,
+								'message': {
+									"text": userMessage,
+								},
 							}, function(res, error){
 								console.log('---- res:', res);
 								if(error || !res.result){
 									alert('[ERROR] 失敗しました。');
 								}
+
+								setLocalState(prevState => ({
+									...prevState,
+									log: [
+										...prevState.log, {
+											text: res.answer.text,
+											isBot: true,
+											timestamp: new Date().toLocaleTimeString(),
+										},
+									],
+								}));
 
 								px2style.closeLoading();
 								inputElement.removeAttribute('disabled');
@@ -87,7 +100,7 @@ const Chat = React.memo((props) => {
 							type="text"
 							name="userMessage"
 							placeholder="メッセージを入力..."
-							className="px2-input chat-input-field"
+							className="px2-input cce-assistant-chat__input-field"
 							ref={chatInputRef}
 						/>
 						<button type="submit" className="px2-btn px2-btn--primary" ref={sendButtonRef}>送信</button>

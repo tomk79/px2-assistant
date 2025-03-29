@@ -7,7 +7,7 @@ namespace tomk79\pickles2\assistant\cce;
 /**
  * main.php
  */
-class main{
+class main {
 
 	/** $px */
 	private $px;
@@ -67,13 +67,17 @@ class main{
 	 * General Purpose Interface (汎用API)
 	 */
 	public function gpi($request){
+		$assistant = new \tomk79\pickles2\assistant\main($this->px);
+
 		switch($request->command){
 			case 'chat-comment':
-				$main = new \tomk79\pickles2\assistant\main($this->px);
-
 				return array(
 					"result" => true,
 					"message" => "OK.",
+					"answer" => array(
+						"type" => "answer",
+						"text" => $request->message->text."; dummy answer!",
+					),
 				);
 
 			case 'ping':
