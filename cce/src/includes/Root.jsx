@@ -5,8 +5,8 @@ import Chat from './components/Chat/Chat.jsx';
 
 const Root = React.memo((props) => {
 	const [globalState, setGlobalState] = useState({
-    });
-    globalState.cceAgent = props.cceAgent;
+	});
+	globalState.cceAgent = props.cceAgent;
 
 	useEffect(() => {
 		// クリーンアップ処理
@@ -14,14 +14,14 @@ const Root = React.memo((props) => {
 		};
 	}, []);
 
-    return (
-        <MainContext.Provider value={globalState}>
-            <Ping
-                cceAgent={props.cceAgent} />
-            <Chat
-                cceAgent={props.cceAgent} />
-        </MainContext.Provider>
-    );
+	return (
+		<MainContext.Provider value={globalState}>
+			{/* <Ping
+				cceAgent={props.cceAgent} /> */}
+			<Chat
+				cceAgent={props.cceAgent} />
+		</MainContext.Provider>
+	);
 });
 
 export default Root;
