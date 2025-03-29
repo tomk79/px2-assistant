@@ -4,6 +4,11 @@
  */
 return call_user_func( function(){
 
+	if( is_file(__DIR__.'/../../../../.env') ){
+		$dotenv = \Dotenv\Dotenv::createImmutable( __DIR__.'/../../../../' );
+		$dotenv->load();
+	}
+
 	// initialize
 
 	/** コンフィグオブジェクト */

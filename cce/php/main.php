@@ -71,13 +71,12 @@ class main {
 
 		switch($request->command){
 			case 'chat-comment':
+				$answer = $assistant->chat()->generate_answer($request->message);
+
 				return array(
 					"result" => true,
 					"message" => "OK.",
-					"answer" => array(
-						"type" => "answer",
-						"text" => $request->message->text."; dummy answer!",
-					),
+					"answer" => $answer,
 				);
 
 			case 'ping':

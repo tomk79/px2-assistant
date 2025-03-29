@@ -3,6 +3,7 @@ Thumbs.db
 .~*.csv#
 ~$*
 !.gitkeep
+.env
 composer.phar
 /vendor/
 

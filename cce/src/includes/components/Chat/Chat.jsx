@@ -4,7 +4,7 @@ import { MainContext } from '../../context/MainContext';
 const Chat = React.memo((props) => {
 	const globalState = useContext(MainContext);
 	const [localState, setLocalState] = useState({
-		chatId: null,
+		chatId: '20250329-gcba9wei', // TODO: ここはクライアント側で動的に生成するようにする
 		log: [],
 	});
 	const chatInputRef = useRef(null);
@@ -68,6 +68,7 @@ const Chat = React.memo((props) => {
 							props.cceAgent.gpi({
 								'command': 'chat-comment',
 								'message': {
+									"chat_id": localState.chatId,
 									"text": userMessage,
 								},
 							}, function(res, error){
