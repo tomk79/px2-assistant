@@ -30,6 +30,35 @@ class chat {
 	}
 
 	/**
+	 * チャットを初期化する
+	 * @param object $chat_id チャットID
+	 * @return object 返答メッセージ
+	 */
+	public function init($chat_id) {
+		if( !$this->is_valid_chat_id($chat_id) ){
+			return (object) array(
+				"error" => "Invalid chat ID.",
+				"chat_id" => null,
+				"messages" => array(),
+			);
+		}
+
+		$realpath_chatlog_json = $this->realpath_data_dir.'chatlog/'.urlencode($chat_id).'.json';
+		$chatlog = (object) array(
+			"chat_id" => $chat_id,
+			"messages" => array(),
+		);
+		if( !is_dir(dirname($realpath_chatlog_json)) ){
+			$this->px->fs()->mkdir_r(dirname($realpath_chatlog_json));
+		}
+		if( is_file($realpath_chatlog_json) ){
+			$chatlog = json_decode( $this->px->fs()->read_file($realpath_chatlog_json) );
+		}
+
+		return $chatlog;
+	}
+
+	/**
 	 * チャットの返答を生成する
 	 * @param object $message チャットメッセージ
 	 * @return object 返答メッセージ
@@ -39,7 +68,7 @@ class chat {
 		if( !$this->is_valid_chat_id($message->chat_id) ){
 			return (object) array(
 				"type" => "error",
-				"text" => "Invalid chat ID.",
+				"content" => "Invalid chat ID.",
 			);
 		}
 
@@ -94,7 +123,7 @@ class chat {
 			if (isset($result->error)) {
 				return (object) [
 					"type" => "error",
-					"text" => $result->error->message,
+					"content" => $result->error->message,
 				];
 			}
 			if (isset($result->choices[0]->message->content)) {
@@ -109,20 +138,21 @@ class chat {
 
 				return (object) [
 					"type" => "answer",
-					"text" => $answerMessage->content,
+					"role" => "assistant",
+					"content" => $answerMessage->content,
 				];
 			}
 			
 		} catch (\Exception $e) {
 			return (object) [
 				"type" => "error",
-				"text" => "Error calling OpenAI API: " . $e->getMessage(),
+				"content" => "Error calling OpenAI API: " . $e->getMessage(),
 			];
 		}
 
 		return (object) array(
 			"type" => "error",
-			"text" => "Error!",
+			"content" => "Error!",
 		);
 	}
 

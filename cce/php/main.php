@@ -70,6 +70,22 @@ class main {
 		$assistant = new \tomk79\pickles2\assistant\main($this->px);
 
 		switch($request->command){
+			case 'chat-init':
+				$chatlog = $assistant->chat()->init($request->chat_id);
+				if($chatlog->chat_id != $request->chat_id){
+					return array(
+						"result" => false,
+						"message" => $request->error,
+						"chatLog" => null,
+					);
+				}
+
+				return array(
+					"result" => true,
+					"message" => "OK.",
+					"chatLog" => $chatlog,
+				);
+
 			case 'chat-comment':
 				$answer = $assistant->chat()->generate_answer($request->message);
 

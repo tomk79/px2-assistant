@@ -5,16 +5,45 @@ const Chat = React.memo((props) => {
 	const globalState = useContext(MainContext);
 	const [localState, setLocalState] = useState({
 		chatId: '20250329-gcba9wei', // TODO: ここはクライアント側で動的に生成するようにする
+		isInitialized: false,
 		log: [],
 	});
 	const chatInputRef = useRef(null);
 	const sendButtonRef = useRef(null);
 
 	useEffect(() => {
-		// クリーンアップ処理
+		props.cceAgent.gpi({
+			'command': 'chat-init',
+			"chat_id": localState.chatId,
+		}, function(res, error){
+			console.log('---- res:', res);
+			if(error || !res.result){
+				alert('[ERROR] 失敗しました。');
+			}
+			setLocalState(prevState => ({
+				...prevState,
+				log: [
+					...prevState.log,
+					...res.chatLog.messages,
+				],
+				isInitialized: true,
+			}));
+		});
+
+		// clean up
 		return () => {
 		};
-	}, []);
+	}, [localState.chatId]);
+
+	if(!localState.isInitialized){
+		return (
+			<div className="cce-assistant-chat">
+				<div className="cce-assistant-chat__loading">
+					<p>Loading...</p>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<>
@@ -22,13 +51,13 @@ const Chat = React.memo((props) => {
 				<div className="cce-assistant-chat__messages">
 					{localState.log.length > 0 ? (
 						localState.log.map((message, index) => (
-							<div key={index} className={`cce-assistant-chat__message ${message.isBot ? 'cce-assistant-chat__message--user' : 'cce-assistant-chat__message--assistant'}`}>
+							<div key={index} className={`cce-assistant-chat__message ${message.role == "assistant" ? 'cce-assistant-chat__message--user' : 'cce-assistant-chat__message--assistant'}`}>
 								<div className="cce-assistant-chat__message-avatar">
-									{message.isBot ? '🤖' : '👤'}
+									{message.role == "assistant" ? '🤖' : '👤'}
 								</div>
 								<div className="cce-assistant-chat__message-content">
-									<p>{message.text}</p>
-									<span className="cce-assistant-chat__message-time">{message.timestamp}</span>
+									<p>{message.content}</p>
+									<span className="cce-assistant-chat__message-time">{message.datetime}</span>
 								</div>
 							</div>
 						))
@@ -49,9 +78,9 @@ const Chat = React.memo((props) => {
 
 						if (userMessage) {
 							const newMessage = {
-								text: userMessage,
-								isBot: false,
-								timestamp: new Date().toLocaleTimeString(),
+								content: userMessage,
+								role: "user",
+								datetime: new Date().toISOString(),
 							};
 
 							setLocalState(prevState => ({
@@ -81,9 +110,9 @@ const Chat = React.memo((props) => {
 									...prevState,
 									log: [
 										...prevState.log, {
-											text: res.answer.text,
-											isBot: true,
-											timestamp: new Date().toLocaleTimeString(),
+											content: res.answer.content,
+											role: "assistant",
+											datetime: new Date().toISOString(),
 										},
 									],
 								}));
