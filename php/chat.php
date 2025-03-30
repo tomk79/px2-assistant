@@ -86,12 +86,51 @@ class chat {
 
 		array_push(
 			$chatlog->messages,
-			array(
+			(object) array(
 				'role' => 'user',
-				'content' => $message->text,
+				'content' => $message->content ?? '',
 				'datetime' => gmdate('Y-m-d\TH:i:s\Z'),
 			)
 		);
+
+		ob_start(); ?>
+[System message]
+You are a helpful assistant.
+
+You have access to the following tools:
+
+calculator: A calculator for performing arithmetic operations, args: {"expression":{"type":"string","description":"The mathematical expression to evaluate."}}
+weather: Get the current weather in a given location, args: {"location":{"type":"string","description":"The city and state, e.g. San Francisco, CA"}}
+
+Use the following format:
+
+Thought: I need to solve this problem step-by-step.
+Action: the action to take, should be one of [calculator, weather]
+Action Input: the input to the action
+Observation: the result of the action
+... (this Thought/Action/Action Input/Observation can repeat N times)
+Thought: I know the final answer
+Final Answer: the final answer to the original input question
+
+Begin!
+
+[User message]
+<?= $message->content ?>
+<?php
+		$systemMessage = ob_get_clean();
+
+		$promptMessages = array();
+		foreach($chatlog->messages as $message){
+			array_push($promptMessages, (object) array(
+				'role' => $message->role,
+				'content' => $message->content,
+				'datetime' => $message->datetime,
+			));
+		}
+		// array_push($promptMessages, (object) array(
+		// 	'role' => 'user',
+		// 	'content' => $systemMessage,
+		// ));
 
 		try {
 			// リクエストを実行
@@ -108,8 +147,9 @@ class chat {
 						)),
 						'timeout' => 60 * 3,
 						'content' => json_encode(array(
-							"model" => "gpt-3.5-turbo",
-							"messages" => $chatlog->messages,
+							"model" => "gpt-4o-mini",
+							// "model" => "gpt-3.5-turbo",
+							"messages" => $promptMessages,
 							"temperature" => 0.7,
 							"max_tokens" => 1000,
 						)),

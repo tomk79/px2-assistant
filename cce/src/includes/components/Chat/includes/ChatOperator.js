@@ -16,7 +16,7 @@ class ChatOperator {
                 'command': 'chat-comment',
                 'message': {
                     "chat_id": this.#chatId,
-                    "text": userMessage,
+                    "content": userMessage,
                 },
             }, function(res, error){
                 console.log('---- res:', res);
