@@ -76,6 +76,7 @@ class chat {
 		$chatlog = (object) array(
 			"chat_id" => $message->chat_id,
 			"messages" => array(),
+			"temporary_system_prompts" => array(),
 		);
 		if( !is_dir(dirname($realpath_chatlog_json)) ){
 			$this->px->fs()->mkdir_r(dirname($realpath_chatlog_json));
@@ -84,28 +85,40 @@ class chat {
 			$chatlog = json_decode( $this->px->fs()->read_file($realpath_chatlog_json) );
 		}
 
-		array_push(
-			$chatlog->messages,
-			(object) array(
-				'role' => 'user',
-				'content' => $message->content ?? '',
-				'datetime' => gmdate('Y-m-d\TH:i:s\Z'),
-			)
-		);
 
-		// Function Calling Prompt を作成する
-		$functionCallingPromptMessages = array();
-		foreach($chatlog->messages as $messageRow){
-			array_push($functionCallingPromptMessages, (object) array(
-				'role' => $messageRow->role,
-				'content' => $messageRow->content,
-				'datetime' => $messageRow->datetime,
-			));
+		if($message->type !== "function_call"){
+			array_push(
+				$chatlog->messages,
+				(object) array(
+					'role' => 'user',
+					'content' => $message->content ?? '',
+					'datetime' => gmdate('Y-m-d\TH:i:s\Z'),
+				)
+			);
+			// Function Calling Prompt を作成する
+			array_push(
+				$chatlog->temporary_system_prompts,
+				(object) array(
+					'role' => 'user',
+					'content' => $this->mk_systemprompt_for_function_calling($message->content),
+					'datetime' => gmdate('Y-m-d\TH:i:s\Z'),
+				)
+			);
+		}else{
+			array_push(
+				$chatlog->temporary_system_prompts,
+				(object) array(
+					'role' => 'user',
+					'content' => $message->content,
+					'datetime' => gmdate('Y-m-d\TH:i:s\Z'),
+				)
+			);
 		}
-		array_push($functionCallingPromptMessages, (object) array(
-			'role' => 'user',
-			'content' => $this->mk_systemprompt_for_function_calling($message->content),
-		));
+
+		$functionCallingPromptMessages = array_merge(
+			$chatlog->messages,
+			$chatlog->temporary_system_prompts
+		);
 
 		try {
 			// リクエストを実行
@@ -145,10 +158,30 @@ class chat {
 
 				$answerMessage = $result->choices[0]->message;
 				$answerMessage->datetime = gmdate('Y-m-d\TH:i:s\Z');
+
+				$parsed_answer = $this->parse_systemanswer($answerMessage->content);
+				if( $parsed_answer->type == 'function_call' ){
+					array_push(
+						$chatlog->temporary_system_prompts,
+						$answerMessage
+					);
+					$this->px->fs()->save_file($realpath_chatlog_json, json_encode($chatlog, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE));
+
+					return (object) [
+						"type" => "function_call",
+						"role" => "assistant",
+						"function" => $parsed_answer->function,
+						"args" => $parsed_answer->args,
+					];
+				}
+
+				$answerMessage->content = $parsed_answer->content ?? $answerMessage->content;
+
 				array_push(
 					$chatlog->messages,
 					$answerMessage
 				);
+				$chatlog->temporary_system_prompts = array();
 				$this->px->fs()->save_file($realpath_chatlog_json, json_encode($chatlog, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE));
 
 				return (object) [
@@ -208,15 +241,15 @@ You are a helpful assistant.
 
 You have access to the following tools:
 
-- calculator: A calculator for performing arithmetic operations, args: {"expression":{"type":"string","description":"The mathematical expression to evaluate."}}
-- weather: Get the current weather in a given location, args: {"location":{"type":"string","description":"The city and state, e.g. San Francisco, CA"}}
+- `calculator`: A calculator for performing arithmetic operations, args: {"expression":{"type":"string","description":"The mathematical expression to evaluate."}}
+- `weather`: Get the current weather in a given location, args: {"location":{"type":"string","description":"The city and state, e.g. San Francisco, CA"}, "date": {"type":"string","description":"Format to `YYYY-MM-dd`", e.g. 2025-03-30}}
 
 If you need to use any tool, use the following format:
 
 ```
-<Thought> I need to solve this problem step-by-step.
-<Action>: the action to take, should be one of [calculator, weather]
-<Action Input>: the input to the action
+<Thought>I need to solve this problem step-by-step.</Thought>
+<Function>the function to take, should be one of [calculator, weather]</Function>
+<Args>the input to the function as a JSON object.</Args>
 ```
 
 Then the tool provides the output in the next message.
@@ -224,7 +257,7 @@ Then the tool provides the output in the next message.
 Else if, you can answer the question directly, use the following format:
 
 ```
-<Final Answer>: the answer to the user's question
+<FinalAnswer>the answer to the user's question</FinalAnswer>
 ```
 
 You can also ask the user for more information if needed.
@@ -236,5 +269,49 @@ Begin!
 <?php
 		$systemMessage = ob_get_clean();
 		return $systemMessage;
+	}
+	private function parse_systemanswer($answer){
+		preg_match('/<Thought>(.*?)<\/Thought>/si', $answer, $matched);
+		$thought = '';
+		if( isset($matched[1]) && strlen($matched[1]) ){
+			$thought = $matched[1];
+		}
+		preg_match('/<Function>(.*?)<\/Function>/si', $answer, $matched);
+		$function = '';
+		if( isset($matched[1]) && strlen($matched[1]) ){
+			$function = $matched[1];
+		}
+		preg_match('/<Args>(.*?)(?:<\/Args>|\`\`\`*\s*$|$)/si', $answer, $matched);
+		$args = (object) array();
+		if( isset($matched[1]) && strlen($matched[1]) ){
+			$args = json_decode($matched[1]);
+			if( !is_object($args) ){
+				$args = (object) array();
+			}
+		}
+		preg_match('/<FinalAnswer>(.*?)(?:<\/FinalAnswer>|\`\`\`*\s*$|$)/si', $answer, $matched);
+		$final_answer = '';
+		if( isset($matched[1]) && strlen($matched[1]) ){
+			$final_answer = $matched[1];
+		}
+
+		if( $function ){
+			return (object) array(
+				'type' => 'function_call',
+				'function' => $function,
+				'args' => $args,
+			);
+		}
+		if( $final_answer ){
+			return (object) array(
+				'type' => 'answer',
+				'content' => $final_answer,
+			);
+		}
+
+		return (object) array(
+			'type' => 'answer',
+			'content' => $answer,
+		);
 	}
 }
