@@ -1,12 +1,16 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
-import { MainContext } from '../../context/MainContext';
+// import { MainContext } from '../../context/MainContext';
+import ChatOperator from './includes/ChatOperator.js';
 
 const Chat = React.memo((props) => {
-	const globalState = useContext(MainContext);
+	// const globalState = useContext(MainContext);
+
+	const chatId = props.chatId || '20250329-gcba9wei'; // TODO: ここはクライアント側で動的に生成するようにする
 	const [localState, setLocalState] = useState({
-		chatId: '20250329-gcba9wei', // TODO: ここはクライアント側で動的に生成するようにする
+		chatId: chatId,
 		isInitialized: false,
 		log: [],
+		chatOperator: new ChatOperator(chatId, props.cceAgent),
 	});
 	const chatInputRef = useRef(null);
 	const sendButtonRef = useRef(null);
@@ -69,7 +73,7 @@ const Chat = React.memo((props) => {
 				</div>
 
 				<div className="cce-assistant-chat__input">
-					<form onSubmit={(e) => {
+					<form onSubmit={async (e) => {
 						e.preventDefault();
 						const inputElement = chatInputRef.current;
 						const buttonElement = sendButtonRef.current;
@@ -77,6 +81,7 @@ const Chat = React.memo((props) => {
 						const userMessage = inputElement.value.trim();
 
 						if (userMessage) {
+
 							const newMessage = {
 								content: userMessage,
 								role: "user",
@@ -88,42 +93,39 @@ const Chat = React.memo((props) => {
 								log: [...prevState.log, newMessage],
 							}));
 
-							// ここでAIの応答を生成するロジックを追加できます
-							// 例: API呼び出しなど
 							px2style.loading();
 							inputElement.setAttribute('disabled', true);
 							buttonElement.setAttribute('disabled', true);
 
-							props.cceAgent.gpi({
-								'command': 'chat-comment',
-								'message': {
-									"chat_id": localState.chatId,
-									"text": userMessage,
-								},
-							}, function(res, error){
-								console.log('---- res:', res);
-								if(error || !res.result){
+							localState.chatOperator.sendMessage(userMessage)
+								.then((answer) => {
+									return new Promise((resolve, reject) => {
+
+										setLocalState(prevState => ({
+											...prevState,
+											log: [
+												...prevState.log, {
+													content: answer.content,
+													role: "assistant",
+													datetime: new Date().toISOString(),
+												},
+											],
+										}));
+										resolve();
+									});
+								})
+								.catch((error) => {
+									console.error(error);
 									alert('[ERROR] 失敗しました。');
-								}
+								})
+								.finally(() => {
+									px2style.closeLoading();
+									inputElement.removeAttribute('disabled');
+									buttonElement.removeAttribute('disabled');
 
-								setLocalState(prevState => ({
-									...prevState,
-									log: [
-										...prevState.log, {
-											content: res.answer.content,
-											role: "assistant",
-											datetime: new Date().toISOString(),
-										},
-									],
-								}));
-
-								px2style.closeLoading();
-								inputElement.removeAttribute('disabled');
-								buttonElement.removeAttribute('disabled');
-
-								inputElement.value = '';
-								inputElement.focus();
-							});
+									inputElement.value = '';
+									inputElement.focus();
+								});
 						}
 					}}>
 						<input
