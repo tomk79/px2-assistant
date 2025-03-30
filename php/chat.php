@@ -93,44 +93,19 @@ class chat {
 			)
 		);
 
-		ob_start(); ?>
-[System message]
-You are a helpful assistant.
-
-You have access to the following tools:
-
-calculator: A calculator for performing arithmetic operations, args: {"expression":{"type":"string","description":"The mathematical expression to evaluate."}}
-weather: Get the current weather in a given location, args: {"location":{"type":"string","description":"The city and state, e.g. San Francisco, CA"}}
-
-Use the following format:
-
-Thought: I need to solve this problem step-by-step.
-Action: the action to take, should be one of [calculator, weather]
-Action Input: the input to the action
-Observation: the result of the action
-... (this Thought/Action/Action Input/Observation can repeat N times)
-Thought: I know the final answer
-Final Answer: the final answer to the original input question
-
-Begin!
-
-[User message]
-<?= $message->content ?>
-<?php
-		$systemMessage = ob_get_clean();
-
-		$promptMessages = array();
-		foreach($chatlog->messages as $message){
-			array_push($promptMessages, (object) array(
-				'role' => $message->role,
-				'content' => $message->content,
-				'datetime' => $message->datetime,
+		// Function Calling Prompt を作成する
+		$functionCallingPromptMessages = array();
+		foreach($chatlog->messages as $messageRow){
+			array_push($functionCallingPromptMessages, (object) array(
+				'role' => $messageRow->role,
+				'content' => $messageRow->content,
+				'datetime' => $messageRow->datetime,
 			));
 		}
-		// array_push($promptMessages, (object) array(
-		// 	'role' => 'user',
-		// 	'content' => $systemMessage,
-		// ));
+		array_push($functionCallingPromptMessages, (object) array(
+			'role' => 'user',
+			'content' => $this->mk_systemprompt_for_function_calling($message->content),
+		));
 
 		try {
 			// リクエストを実行
@@ -149,7 +124,7 @@ Begin!
 						'content' => json_encode(array(
 							"model" => "gpt-4o-mini",
 							// "model" => "gpt-3.5-turbo",
-							"messages" => $promptMessages,
+							"messages" => $functionCallingPromptMessages,
 							"temperature" => 0.7,
 							"max_tokens" => 1000,
 						)),
@@ -224,5 +199,42 @@ Begin!
 		}
 		
 		return true;
+	}
+
+	private function mk_systemprompt_for_function_calling($messageContent){
+		ob_start(); ?>
+[System message]
+You are a helpful assistant.
+
+You have access to the following tools:
+
+- calculator: A calculator for performing arithmetic operations, args: {"expression":{"type":"string","description":"The mathematical expression to evaluate."}}
+- weather: Get the current weather in a given location, args: {"location":{"type":"string","description":"The city and state, e.g. San Francisco, CA"}}
+
+If you need to use any tool, use the following format:
+
+```
+<Thought> I need to solve this problem step-by-step.
+<Action>: the action to take, should be one of [calculator, weather]
+<Action Input>: the input to the action
+```
+
+Then the tool provides the output in the next message.
+
+Else if, you can answer the question directly, use the following format:
+
+```
+<Final Answer>: the answer to the user's question
+```
+
+You can also ask the user for more information if needed.
+
+Begin!
+
+[User message]
+<?= $messageContent ?>
+<?php
+		$systemMessage = ob_get_clean();
+		return $systemMessage;
 	}
 }
