@@ -19,6 +19,14 @@ class main {
 	private $cceAgent;
 
 	/**
+	 * CCEを登録する
+	 * @param object $options 設定オプション
+	 */
+	public static function register ($options = null) {
+		return '\tomk79\pickles2\assistant\cce\main('.json_encode($options).')';
+	}
+
+	/**
 	 * コンストラクタ
 	 * @param object $px Pickles 2 オブジェクト
 	 * @param object $options 設定オプション
@@ -67,7 +75,7 @@ class main {
 	 * General Purpose Interface (汎用API)
 	 */
 	public function gpi($request){
-		$assistant = new \tomk79\pickles2\assistant\main($this->px);
+		$assistant = new \tomk79\pickles2\assistant\main($this->px, $this->options);
 
 		switch($request->command){
 			case 'chat-init':

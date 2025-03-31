@@ -15,6 +15,9 @@ class chat {
 	/** メインオブジェクト */
 	private $main;
 
+	/** モデル管理オブジェクト */
+	private $models;
+
 	/** データディレクトリ */
 	private $realpath_data_dir;
 
@@ -25,6 +28,7 @@ class chat {
 	public function __construct( $main ){
 		$this->main = $main;
 		$this->px = $this->main->px();
+		$this->models = new models($main);
 
 		$this->realpath_data_dir = $this->main->get_realpath_data_dir();
 	}
@@ -122,32 +126,12 @@ class chat {
 
 		try {
 			// リクエストを実行
-			$response = file_get_contents(
-				'https://api.openai.com/v1/chat/completions',
-				false,
-				stream_context_create(array(
-					'http' => array(
-						'method' => 'POST',
-						'header' => implode("\r\n", array(
-							'Content-Type: application/json',
-							'Authorization: Bearer '.($_ENV['OPEN_AI_SECRET'] ?? null),
-							'OpenAI-Organization: '.($_ENV['OPEN_AI_ORG_ID'] ?? null),
-						)),
-						'timeout' => 60 * 3,
-						'content' => json_encode(array(
-							"model" => "gpt-4o-mini",
-							// "model" => "gpt-3.5-turbo",
-							"messages" => $functionCallingPromptMessages,
-							"temperature" => 0.7,
-							"max_tokens" => 1000,
-						)),
-						'ignore_errors' => true,
-					)
-				))
+			$result = $this->models->send_chat_message(
+				"openai-gpt-4o-mini",
+				$functionCallingPromptMessages
 			);
-			
+
 			// レスポンスを解析
-			$result = json_decode($response);
 			if (isset($result->error)) {
 				return (object) [
 					"type" => "error",

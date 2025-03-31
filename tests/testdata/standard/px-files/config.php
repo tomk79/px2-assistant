@@ -365,7 +365,20 @@ return call_user_func( function(){
 
 	$conf->plugins->px2dt->custom_console_extensions = array(
 	    'px2-assistant' => array(
-			'class_name' => 'tomk79\pickles2\assistant\cce\main()',
+			'class_name' => \tomk79\pickles2\assistant\cce\main::register(array(
+				"models" => array(
+					"chat" => array(
+						"openai-gpt-4o-mini" => array(
+							"url" => "https://api.openai.com/v1/chat/completions",
+							"model" => "gpt-4o-mini",
+						),
+						"openai-gpt-3.5-turbo" => array(
+							"url" => "https://api.openai.com/v1/chat/completions",
+							"model" => "gpt-3.5-turbo",
+						),
+					),
+				),
+			)),
 			'capability' => array('manage'),
 		),
 	);

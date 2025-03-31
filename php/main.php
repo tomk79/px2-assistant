@@ -12,15 +12,20 @@ class main {
 	/** Picklesオブジェクト */
 	private $px;
 
+	/** 設定オプション */
+	private $options;
+
 	/** データディレクトリ */
 	private $realpath_data_dir;
 
 	/**
 	 * constructor
 	 * @param object $px Picklesオブジェクト
+	 * @param object $options 設定オプション
 	 */
-	public function __construct( $px ){
+	public function __construct( $px, $options ){
 		$this->px = $px;
+		$this->options = $options;
 
 		$this->realpath_data_dir = $this->px->get_realpath_homedir() . '_sys/ram/data/px2-assistant/';
 		if(!is_dir($this->realpath_data_dir)){
@@ -33,6 +38,13 @@ class main {
 	 */
 	public function px(){
 		return $this->px;
+	}
+
+	/**
+	 * $options を取得する
+	 */
+	public function options(){
+		return $this->options;
 	}
 
 	/**
