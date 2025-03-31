@@ -1,0 +1,11 @@
+{
+	"type": "function",
+	"name": "clearcache",
+	"description": "Clear the Pickles 2 cache.",
+	"parameters": {
+		"type": "object",
+		"properties": {
+		},
+		"required": []
+	}
+}

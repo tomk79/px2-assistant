@@ -234,6 +234,20 @@ class chat {
 		return true;
 	}
 
+	private function get_function_list(){
+		$fncJsonBaseDir = __DIR__.'/../data/functions/';
+		$fncJsons = $this->px->fs()->ls($fncJsonBaseDir);
+		$function_list = (object) array();
+		foreach($fncJsons as $fncJsonName){
+			$fncJson = json_decode($this->px->fs()->read_file($fncJsonBaseDir.$fncJsonName));
+			if( !isset($fncJson->name) || !isset($fncJson->description) ){
+				continue;
+			}
+			$function_list->{$fncJson->name} = $fncJson;
+		}
+		return $function_list;
+	}
+
 	private function mk_systemprompt_for_function_calling($messageContent){
 		ob_start(); ?>
 [System message]
@@ -241,8 +255,12 @@ You are a helpful assistant.
 
 You have access to the following tools:
 
-- `calculator`: A calculator for performing arithmetic operations, args: {"expression":{"type":"string","description":"The mathematical expression to evaluate."}}
-- `weather`: Get the current weather in a given location, args: {"location":{"type":"string","description":"The city and state, e.g. San Francisco, CA"}, "date": {"type":"string","description":"Format to `YYYY-MM-dd`", e.g. 2025-03-30}}
+<?php
+	$function_list = $this->get_function_list();
+	foreach($function_list as $function){
+		echo '- '.$function->name.': '.$function->description.', args: '.json_encode($function->parameters->properties)."\n";
+	}
+?>
 
 If you need to use any tool, use the following format:
 
@@ -270,6 +288,7 @@ Begin!
 		$systemMessage = ob_get_clean();
 		return $systemMessage;
 	}
+
 	private function parse_systemanswer($answer){
 		preg_match('/<Thought>(.*?)<\/Thought>/si', $answer, $matched);
 		$thought = '';

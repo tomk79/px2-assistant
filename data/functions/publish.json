@@ -1,0 +1,27 @@
+{
+	"type": "function",
+	"name": "publish",
+	"description": "The entire site created with Pickles 2 is written out to a static file.",
+	"parameters": {
+		"type": "object",
+		"properties": {
+			"path_region": {
+				"type": "string",
+				"description": "Specify one directory path to be the target. If omitted, the current directory will be the target."
+			},
+			"paths_region": {
+				"type": "string",
+				"description": "Specify additional target ranges. Multiple ranges can be specified using an array."
+			},
+			"paths_ignore": {
+				"type": "string",
+				"description": "Specifies the paths to exclude from publishing within the target range specified by path_region. Multiple paths can be specified."
+			},
+			"keep_cache": {
+				"type": "boolean",
+				"description": "Skip deleting and regenerating the cache when initializing a publish operation."
+			}
+		},
+		"required": []
+	}
+}
