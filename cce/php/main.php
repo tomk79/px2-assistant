@@ -78,6 +78,13 @@ class main {
 		$assistant = new \tomk79\pickles2\assistant\main($this->px, $this->options);
 
 		switch($request->command){
+			case 'bootup-information':
+				return array(
+					"result" => true,
+					"message" => "OK.",
+					"options" => $this->options,
+				);
+
 			case 'chat-init':
 				$chatlog = $assistant->chat()->init($request->chat_id);
 				if($chatlog->chat_id != $request->chat_id){

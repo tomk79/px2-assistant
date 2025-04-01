@@ -378,6 +378,11 @@ return call_user_func( function(){
 							"model" => "gpt-3.5-turbo",
 							"label" => "OpenAI gpt-3.5-turbo",
 						),
+						"ollama-deepseek-r1:14b" => array(
+							"url" => "http://localhost:11434/v1/chat/completions",
+							"model" => "deepseek-r1:14b",
+							"label" => "Ollama deepseek-r1:14b",
+						),
 					),
 				),
 			)),

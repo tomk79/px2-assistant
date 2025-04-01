@@ -7,14 +7,35 @@ import Chat from './components/Chat/Chat.jsx';
 const Root = React.memo((props) => {
 	const [globalState, setGlobalState] = useState({
 		currentChatId: null,
+		options: null,
 	});
 	globalState.cceAgent = props.cceAgent;
 
 	useEffect(() => {
-		// クリーンアップ処理
+
+		props.cceAgent.gpi({
+			'command': 'bootup-information',
+		}, function(res, error){
+			if(error || !res.result){
+				alert('[ERROR] Failed to initialize.');
+				return;
+			}
+			setGlobalState(prevState => ({
+				...prevState,
+				options: res.options,
+			}));
+		});
+
+		// cleanup
 		return () => {
 		};
 	}, []);
+
+	if(!globalState.options){
+		return (<>
+			<div>Loading...</div>
+		</>);
+	}
 
 	return (
 		<MainContext.Provider value={globalState}>
@@ -40,6 +61,7 @@ const Root = React.memo((props) => {
 				<div className="cce-assistant-root-layout__main">
 					<Chat
 						chatId={globalState.currentChatId}
+						models={globalState.options.models}
 						cceAgent={props.cceAgent} />
 				</div>
 			</div>

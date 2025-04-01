@@ -61,6 +61,8 @@ class models {
 			}
 		}
 
+		set_time_limit(60 * 60);
+
 		// リクエストを実行
 		$response = file_get_contents(
 			$selectedModel->url,
@@ -81,6 +83,9 @@ class models {
 			))
 		);
 		$result = json_decode($response);
+
+		set_time_limit(30);
+
 		return $result;
 	}
 }

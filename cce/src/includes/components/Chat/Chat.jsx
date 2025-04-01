@@ -166,8 +166,11 @@ const Chat = React.memo((props) => {
 						<button type="submit" className="px2-btn px2-btn--primary" ref={sendButtonRef}>Send</button>
 						<div>
 							<select name="model" className="px2-input" ref={selectModelRef}>
-								{/* TODO: 設定情報から選択肢を生成する */}
-								<option value="openai-gpt-4o-min">OpenAI gpt-4o-mini</option>
+								{Object.keys(props.models.chat).map((model, index) => {
+									return (
+										<option key={index} value={model}>{props.models.chat[model].label}</option>
+									);
+								})}
 							</select>
 						</div>
 					</form>
