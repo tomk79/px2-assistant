@@ -371,10 +371,12 @@ return call_user_func( function(){
 						"openai-gpt-4o-mini" => array(
 							"url" => "https://api.openai.com/v1/chat/completions",
 							"model" => "gpt-4o-mini",
+							"label" => "OpenAI gpt-4o-mini",
 						),
 						"openai-gpt-3.5-turbo" => array(
 							"url" => "https://api.openai.com/v1/chat/completions",
 							"model" => "gpt-3.5-turbo",
+							"label" => "OpenAI gpt-3.5-turbo",
 						),
 					),
 				),

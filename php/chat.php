@@ -66,9 +66,10 @@ class chat {
 	/**
 	 * チャットの返答を生成する
 	 * @param object $message チャットメッセージ
+	 * @param string $model モデル名
 	 * @return object 返答メッセージ
 	 */
-	public function generate_answer($message) {
+	public function generate_answer($message, $model) {
 
 		if( !$this->is_valid_chat_id($message->chat_id) ){
 			return (object) array(
@@ -128,7 +129,7 @@ class chat {
 		try {
 			// リクエストを実行
 			$result = $this->models->send_chat_message(
-				"openai-gpt-4o-mini",
+				$model,
 				$functionCallingPromptMessages
 			);
 

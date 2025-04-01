@@ -13,7 +13,8 @@ const ChatLogList = React.memo((props) => {
 		}, function(res, error){
 			console.log('---- res:', res);
 			if(error || !res.result){
-				alert('[ERROR] 失敗しました。');
+				alert('[ERROR] Failed to get chat log list.');
+				return;
 			}
 			setLocalState(prevState => ({
 				...prevState,

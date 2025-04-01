@@ -26,13 +26,21 @@ class models {
 		$this->main = $main;
 		$this->px = $this->main->px();
 
-		$this->models = $this->main->options()->models;
+		$this->models = $this->main->options()->models ?? null;
 	}
 
 	/**
 	 * モデルを実行する
+	 * @param string $modelName モデル名
+	 * @param array $functionCallingPromptMessages プロンプトメッセージ
+	 * @param array $options オプション
+	 * @return object 返答メッセージ
 	 */
-	public function send_chat_message($modelName, $functionCallingPromptMessages){
+	public function send_chat_message($modelName, $functionCallingPromptMessages, $options = array()) {
+		$options = $options ?? array();
+		$options['temperature'] = $options['temperature'] ?? 0;
+		$options['max_tokens'] = $options['max_tokens'] ?? 2000;
+
 		$selectedModel = $this->models->chat->{$modelName} ?? null;
 		if(!$selectedModel){
 			return (object) array(
@@ -45,8 +53,12 @@ class models {
 		$headers = array();
 		array_push($headers, 'Content-Type: application/json');
 		if( preg_match('/^https\:\/\/api\.openai\.com/', $selectedModel->url) ){
-			array_push($headers, 'Authorization: Bearer '.($_ENV['OPEN_AI_SECRET'] ?? null));
-			array_push($headers, 'OpenAI-Organization: '.($_ENV['OPEN_AI_ORG_ID'] ?? null));
+			if( strlen($_ENV['OPEN_AI_SECRET'] ?? '') ){
+				array_push($headers, 'Authorization: Bearer '.($_ENV['OPEN_AI_SECRET']));
+			}
+			if( strlen($_ENV['OPEN_AI_ORG_ID'] ?? '') ){
+				array_push($headers, 'OpenAI-Organization: '.($_ENV['OPEN_AI_ORG_ID'] ?? null));
+			}
 		}
 
 		// リクエストを実行

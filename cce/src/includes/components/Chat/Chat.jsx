@@ -12,6 +12,7 @@ const Chat = React.memo((props) => {
 		log: [],
 	});
 	const chatInputRef = useRef(null);
+	const selectModelRef = useRef(null);
 	const sendButtonRef = useRef(null);
 
 	const generateNewChatId = () => {
@@ -45,7 +46,8 @@ const Chat = React.memo((props) => {
 				"chat_id": chatId,
 			}, function(res, error){
 				if(error || !res.result){
-					alert('[ERROR] 失敗しました。');
+					alert('[ERROR] Failed to initialize chat.');
+					return;
 				}
 				setLocalState(prevState => ({
 					...prevState,
@@ -89,7 +91,7 @@ const Chat = React.memo((props) => {
 						))
 					) : (
 						<div className="cce-assistant-chat__empty-chat">
-							<p>まだメッセージはありません。何か質問してみましょう！</p>
+							<p>There are no messages yet. Ask a question!</p>
 						</div>
 					)}
 				</div>
@@ -99,8 +101,10 @@ const Chat = React.memo((props) => {
 						e.preventDefault();
 						const inputElement = chatInputRef.current;
 						const buttonElement = sendButtonRef.current;
+						const selectModelElement = selectModelRef.current;
 
 						const userMessage = inputElement.value.trim();
+						const model = selectModelElement.value.trim();
 
 						if (userMessage) {
 
@@ -121,7 +125,7 @@ const Chat = React.memo((props) => {
 
 							const chatId = localState.chatId;
 							const chatOperator = new ChatOperator(chatId, props.cceAgent);
-							chatOperator.sendMessage(userMessage)
+							chatOperator.sendMessage(userMessage, model)
 								.then((answer) => {
 									return new Promise((resolve, reject) => {
 
@@ -140,7 +144,7 @@ const Chat = React.memo((props) => {
 								})
 								.catch((error) => {
 									console.error(error);
-									alert('[ERROR] 失敗しました。');
+									alert('[ERROR] Failed to generate message.');
 								})
 								.finally(() => {
 									px2style.closeLoading();
@@ -155,11 +159,17 @@ const Chat = React.memo((props) => {
 						<textarea
 							type="text"
 							name="userMessage"
-							placeholder="メッセージを入力..."
+							placeholder="Input message ..."
 							className="px2-input cce-assistant-chat__input-field"
 							ref={chatInputRef}
 						></textarea>
-						<button type="submit" className="px2-btn px2-btn--primary" ref={sendButtonRef}>送信</button>
+						<button type="submit" className="px2-btn px2-btn--primary" ref={sendButtonRef}>Send</button>
+						<div>
+							<select name="model" className="px2-input" ref={selectModelRef}>
+								{/* TODO: 設定情報から選択肢を生成する */}
+								<option value="openai-gpt-4o-min">OpenAI gpt-4o-mini</option>
+							</select>
+						</div>
 					</form>
 				</div>
 			</div>

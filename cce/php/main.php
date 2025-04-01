@@ -95,7 +95,7 @@ class main {
 				);
 
 			case 'chat-comment':
-				$answer = $assistant->chat()->generate_answer($request->message);
+				$answer = $assistant->chat()->generate_answer($request->message, $request->model);
 
 				return array(
 					"result" => true,
