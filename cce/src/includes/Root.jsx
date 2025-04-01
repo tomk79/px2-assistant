@@ -1,10 +1,12 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { MainContext } from './context/MainContext';
 import Ping from './components/Ping/Ping.jsx';
+import ChatLogList from './components/ChatLogList/ChatLogList.jsx';
 import Chat from './components/Chat/Chat.jsx';
 
 const Root = React.memo((props) => {
 	const [globalState, setGlobalState] = useState({
+		currentChatId: null,
 	});
 	globalState.cceAgent = props.cceAgent;
 
@@ -18,8 +20,29 @@ const Root = React.memo((props) => {
 		<MainContext.Provider value={globalState}>
 			{/* <Ping
 				cceAgent={props.cceAgent} /> */}
-			<Chat
-				cceAgent={props.cceAgent} />
+			<div>
+				<div>
+					<ChatLogList
+						onStartNewChat={() => {
+							setGlobalState(prevState => ({
+								...prevState,
+								currentChatId: null,
+							}));
+						}}
+						onOpenChat={(chatId) => {
+							setGlobalState(prevState => ({
+								...prevState,
+								currentChatId: chatId,
+							}));
+						}}
+						cceAgent={props.cceAgent} />
+				</div>
+				<div>
+					<Chat
+						chatId={globalState.currentChatId}
+						cceAgent={props.cceAgent} />
+				</div>
+			</div>
 		</MainContext.Provider>
 	);
 });

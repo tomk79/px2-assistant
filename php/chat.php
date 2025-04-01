@@ -51,6 +51,7 @@ class chat {
 		$chatlog = (object) array(
 			"chat_id" => $chat_id,
 			"messages" => array(),
+			"temporary_system_prompts" => array(),
 		);
 		if( !is_dir(dirname($realpath_chatlog_json)) ){
 			$this->px->fs()->mkdir_r(dirname($realpath_chatlog_json));
@@ -316,5 +317,21 @@ Begin!
 			'type' => 'answer',
 			'content' => $answer,
 		);
+	}
+
+	/**
+	 * チャットリストを取得する
+	 * @return object $chatlog_list
+	 */
+	public function get_chatlog_list() {
+		$chatFileList = $this->px->fs()->ls($this->realpath_data_dir.'chatlog/');
+		$chatlog_list = array();
+		foreach($chatFileList as $chatFile){
+			$chatId = preg_replace('/^(.+)\.json$/si', '$1', $chatFile);
+			array_push($chatlog_list, array(
+				'chat_id' => $chatId,
+			));
+		}
+		return $chatlog_list;
 	}
 }

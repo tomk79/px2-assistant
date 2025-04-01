@@ -103,6 +103,15 @@ class main {
 					"answer" => $answer,
 				);
 
+			case 'get-chatlog-list':
+				$chatLogList = $assistant->chat()->get_chatlog_list();
+
+				return array(
+					"result" => true,
+					"message" => "OK.",
+					"chatLogList" => $chatLogList,
+				);
+
 			case 'ping':
 				return array(
 					"result" => true,

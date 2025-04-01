@@ -4,42 +4,64 @@ import ChatOperator from './includes/ChatOperator.js';
 
 const Chat = React.memo((props) => {
 	// const globalState = useContext(MainContext);
+	const chatId = props.chatId || null;
 
-	const chatId = props.chatId || '20250329-gcba9wei'; // TODO: ここはクライアント側で動的に生成するようにする
 	const [localState, setLocalState] = useState({
 		chatId: chatId,
 		isInitialized: false,
 		log: [],
-		chatOperator: new ChatOperator(chatId, props.cceAgent),
 	});
 	const chatInputRef = useRef(null);
 	const sendButtonRef = useRef(null);
 
+	const generateNewChatId = () => {
+		const now = new Date();
+		const year = now.getFullYear();
+		const month = String(now.getMonth() + 1).padStart(2, '0');
+		const date = String(now.getDate()).padStart(2, '0');
+		const YYYYMMDD = `${year}${month}${date}`;
+		const randomString = Math.random().toString(36).substring(2, 10);
+		return `${YYYYMMDD}-${randomString}`;
+	};
+
 	useEffect(() => {
-		props.cceAgent.gpi({
-			'command': 'chat-init',
-			"chat_id": localState.chatId,
-		}, function(res, error){
-			console.log('---- res:', res);
-			if(error || !res.result){
-				alert('[ERROR] 失敗しました。');
-			}
+		const chatId = props.chatId || generateNewChatId();
+		setLocalState(prevState => ({
+			...prevState,
+		}));
+
+
+		if(!props.chatId){
 			setLocalState(prevState => ({
 				...prevState,
-				log: [
-					...prevState.log,
-					...res.chatLog.messages,
-				],
+				log: [],
+				chatId: chatId,
 				isInitialized: true,
 			}));
-		});
+
+		}else{
+			props.cceAgent.gpi({
+				'command': 'chat-init',
+				"chat_id": chatId,
+			}, function(res, error){
+				if(error || !res.result){
+					alert('[ERROR] 失敗しました。');
+				}
+				setLocalState(prevState => ({
+					...prevState,
+					log: res.chatLog.messages,
+					chatId: chatId,
+					isInitialized: true,
+				}));
+			});
+		}
 
 		// clean up
 		return () => {
 		};
-	}, [localState.chatId]);
+	}, [props.chatId]);
 
-	if(!localState.isInitialized){
+	if(localState.chatId && !localState.isInitialized){
 		return (
 			<div className="cce-assistant-chat">
 				<div className="cce-assistant-chat__loading">
@@ -97,7 +119,9 @@ const Chat = React.memo((props) => {
 							inputElement.setAttribute('disabled', true);
 							buttonElement.setAttribute('disabled', true);
 
-							localState.chatOperator.sendMessage(userMessage)
+							const chatId = localState.chatId;
+							const chatOperator = new ChatOperator(chatId, props.cceAgent);
+							chatOperator.sendMessage(userMessage)
 								.then((answer) => {
 									return new Promise((resolve, reject) => {
 
