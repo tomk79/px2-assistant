@@ -20,8 +20,8 @@ const Root = React.memo((props) => {
 		<MainContext.Provider value={globalState}>
 			{/* <Ping
 				cceAgent={props.cceAgent} /> */}
-			<div>
-				<div>
+			<div className="cce-assistant-root-layout">
+				<div className="cce-assistant-root-layout__sidebar">
 					<ChatLogList
 						onStartNewChat={() => {
 							setGlobalState(prevState => ({
@@ -37,7 +37,7 @@ const Root = React.memo((props) => {
 						}}
 						cceAgent={props.cceAgent} />
 				</div>
-				<div>
+				<div className="cce-assistant-root-layout__main">
 					<Chat
 						chatId={globalState.currentChatId}
 						cceAgent={props.cceAgent} />

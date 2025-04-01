@@ -26,14 +26,14 @@ class ChatOperator {
 					"content": userMessage,
 				},
 			}, async (res, error) => {
-				console.log('---- res:', res);
 				if(error || !res.result){
 					alert('[ERROR] 失敗しました。');
 				}
 				if(res.answer.type == "function_call"){
 					let result = '';
 					if( this.#functions[res.answer.function] ){
-						result = await this.#functions[res.answer.function].run(res.answer.args);
+						result = await this.#functions[res.answer.function].run(res.answer.args)
+							.catch(e => e);
 					}else{
 						result = '[Error] undefined function.';
 					}

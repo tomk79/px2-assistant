@@ -40,21 +40,18 @@ const ChatLogList = React.memo((props) => {
 	return (
 		<>
 			<div className="cce-assistant-chatlog-list">
-				<div className="cce-assistant-chatlog-list__messages">
-					<ul>
-						<li>
-							<button type="button" onClick={() => {props.onStartNewChat();}}>New chat</button>
-						</li>
-						{localState.chatLogList.length > 0 ? (
-							localState.chatLogList.map((chatLog, index) => (
-								<li key={index}>
-									<button type="button" onClick={() => {props.onOpenChat(chatLog.chat_id);}}>ID: {chatLog.chat_id}</button>
-								</li>
-							))
-						) : <></>}
-					</ul>
-				</div>
-
+				<ul className="cce-assistant-chatlog-list__chatlog-list">
+					<li>
+						<button type="button" onClick={() => {props.onStartNewChat();}}>New chat</button>
+					</li>
+					{localState.chatLogList.length > 0 ? (
+						localState.chatLogList.map((chatLog, index) => (
+							<li key={index}>
+								<button type="button" onClick={() => {props.onOpenChat(chatLog.chat_id);}}>ID: {chatLog.chat_id}</button>
+							</li>
+						))
+					) : <></>}
+				</ul>
 			</div>
 		</>
 	);

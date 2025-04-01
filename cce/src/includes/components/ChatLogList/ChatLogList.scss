@@ -1,8 +1,22 @@
 .cce-assistant-chatlog-list {
     margin: 1em 0;
 
-    &__message {
+    &__chatlog-list {
+        margin: 0;
+        padding: 0;
         display: flex;
-        gap: 10px;
+        flex-direction: column;
+        gap: 2px;
+        li {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            button {
+                width: 100%;
+                display: block;
+                box-sizing: border-box;
+                text-align: left;
+            }
+        }
     }
 }

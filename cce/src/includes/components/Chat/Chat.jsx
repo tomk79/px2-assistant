@@ -152,13 +152,13 @@ const Chat = React.memo((props) => {
 								});
 						}
 					}}>
-						<input
+						<textarea
 							type="text"
 							name="userMessage"
 							placeholder="メッセージを入力..."
 							className="px2-input cce-assistant-chat__input-field"
 							ref={chatInputRef}
-						/>
+						></textarea>
 						<button type="submit" className="px2-btn px2-btn--primary" ref={sendButtonRef}>送信</button>
 					</form>
 				</div>

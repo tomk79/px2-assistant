@@ -1,2 +1,13 @@
 @import "./includes/components/ChatLogList/ChatLogList.scss";
 @import "./includes/components/Chat/Chat.scss";
+
+.cce-assistant-root-layout {
+    display: flex;
+    gap: 20px;
+    &__sidebar {
+        width: 30%;
+    }
+    &__main {
+        width: 70%;
+    }
+}
