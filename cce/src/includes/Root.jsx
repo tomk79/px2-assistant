@@ -44,6 +44,7 @@ const Root = React.memo((props) => {
 			<div className="cce-assistant-root-layout">
 				<div className="cce-assistant-root-layout__sidebar">
 					<ChatLogList
+						currentChatId={globalState.currentChatId}
 						onStartNewChat={() => {
 							setGlobalState(prevState => ({
 								...prevState,

@@ -16,6 +16,10 @@
                 display: block;
                 box-sizing: border-box;
                 text-align: left;
+                &.is-current {
+                    font-weight: bold;
+                    opacity: 0.8;
+                }
             }
         }
     }

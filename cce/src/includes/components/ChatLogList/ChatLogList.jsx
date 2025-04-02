@@ -9,7 +9,6 @@ const ChatLogList = React.memo((props) => {
 	useEffect(() => {
 		props.cceAgent.gpi({
 			'command': 'get-chatlog-list',
-			"chat_id": localState.chatId,
 		}, function(res, error){
 			console.log('---- res:', res);
 			if(error || !res.result){
@@ -48,7 +47,10 @@ const ChatLogList = React.memo((props) => {
 					{localState.chatLogList.length > 0 ? (
 						localState.chatLogList.map((chatLog, index) => (
 							<li key={index}>
-								<button type="button" onClick={() => {props.onOpenChat(chatLog.chat_id);}}>{chatLog.title}</button>
+								<button
+									type="button"
+									className={`${props.currentChatId == chatLog.chat_id ? 'is-current' : ''}`}
+									onClick={() => {props.onOpenChat(chatLog.chat_id);}}>{chatLog.title}</button>
 							</li>
 						))
 					) : <></>}
