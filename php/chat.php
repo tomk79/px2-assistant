@@ -333,10 +333,39 @@ Begin!
 		$chatlog_list = array();
 		foreach($chatFileList as $chatFile){
 			$chatId = preg_replace('/^(.+)\.json$/si', '$1', $chatFile);
-			array_push($chatlog_list, array(
+
+			$chatContent = json_decode( file_get_contents($this->realpath_data_dir.'chatlog/'.$chatFile) );
+			$title = '...';
+			$updated_at = null;
+			if(count($chatContent->messages)){
+				$title = mb_substr($chatContent->messages[0]->content, 0, 24);
+				if (mb_strlen($chatContent->messages[0]->content) > 24) {
+					$title .= '...';
+				}
+				$updated_at = $chatContent->messages[count($chatContent->messages)-1]->datetime;
+			}
+
+			array_push($chatlog_list, (object) array(
 				'chat_id' => $chatId,
+				'title' => $title,
+				'updated_at' => $updated_at,
 			));
 		}
+
+		// Sort chatlog list by updated_at in descending order (newest first)
+		usort($chatlog_list, function($a, $b) {
+			if (!isset($a->updated_at) && !isset($b->updated_at)) {
+				return 0;
+			}
+			if (!isset($a->updated_at)) {
+				return 1;
+			}
+			if (!isset($b->updated_at)) {
+				return -1;
+			}
+			return strcmp($b->updated_at, $a->updated_at);
+		});
+
 		return $chatlog_list;
 	}
 }

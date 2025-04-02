@@ -48,7 +48,7 @@ const ChatLogList = React.memo((props) => {
 					{localState.chatLogList.length > 0 ? (
 						localState.chatLogList.map((chatLog, index) => (
 							<li key={index}>
-								<button type="button" onClick={() => {props.onOpenChat(chatLog.chat_id);}}>ID: {chatLog.chat_id}</button>
+								<button type="button" onClick={() => {props.onOpenChat(chatLog.chat_id);}}>{chatLog.title}</button>
 							</li>
 						))
 					) : <></>}
