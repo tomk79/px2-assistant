@@ -35,6 +35,13 @@ composer require tomk79/px2-assistant
 	);
 ```
 
+OpenAI のモデルを使用するには、環境変数 `$_ENV['OPEN_AI_SECRET']`、 `$_ENV['OPEN_AI_ORG_ID']` にアクセスキーをセットしてください。
+
+```ini
+# .env
+OPEN_AI_SECRET="xx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+OPEN_AI_ORG_ID="org-xxxxxxxxxxxxxx"
+```
 
 ## 更新履歴 - Change log
 
