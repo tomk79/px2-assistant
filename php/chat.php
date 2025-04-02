@@ -99,7 +99,7 @@ class chat {
 				$chatlog->temporary_system_prompts,
 				(object) array(
 					'role' => 'user',
-					'content' => $message->content,
+					'content' => $message->content ?? '',
 					'datetime' => gmdate('Y-m-d\TH:i:s\Z'),
 				)
 			);
@@ -119,7 +119,7 @@ class chat {
 				$chatlog->temporary_system_prompts,
 				(object) array(
 					'role' => 'user',
-					'content' => $this->mk_systemprompt_for_function_calling($message->content),
+					'content' => $this->mk_systemprompt_for_function_calling($message->content ?? ''),
 					'datetime' => gmdate('Y-m-d\TH:i:s\Z'),
 				)
 			);
