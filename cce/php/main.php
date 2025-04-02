@@ -59,6 +59,9 @@ class main {
 		$rtn = array();
 		$rtn['css'] = array();
 		array_push($rtn['css'], 'assistantCceFront.css');
+		array_push($rtn['css'], 'assistantCceFront--auto.css');
+		array_push($rtn['css'], 'assistantCceFront--light.css');
+		array_push($rtn['css'], 'assistantCceFront--dark.css');
 		$rtn['js'] = array();
 		array_push($rtn['js'], 'assistantCceFront.js');
 		return $rtn;

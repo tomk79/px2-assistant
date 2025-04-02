@@ -1,0 +1,18 @@
+.cce-assistant-chatlog-list {
+    &__chatlog-list {
+        li {
+            button {
+                color: #d6d6d6;
+                background-color: transparent;
+                &:hover {
+                    color: #fff;
+                    background-color: #111;
+                }
+                &.is-current {
+                    color: #fff;
+                    background-color: #000;
+                }
+            }
+        }
+    }
+}

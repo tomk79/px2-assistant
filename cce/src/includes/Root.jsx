@@ -41,7 +41,13 @@ const Root = React.memo((props) => {
 		<MainContext.Provider value={globalState}>
 			{/* <Ping
 				cceAgent={props.cceAgent} /> */}
-			<div className="cce-assistant-root-layout">
+			<div className={`cce-assistant-root-layout cce-assistant-root-layout--${globalState.cceAgent.appearance()}`}>
+				<div className="cce-assistant-root-layout__main">
+					<Chat
+						chatId={globalState.currentChatId}
+						models={globalState.options.models}
+						cceAgent={props.cceAgent} />
+				</div>
 				<div className="cce-assistant-root-layout__sidebar">
 					<ChatLogList
 						currentChatId={globalState.currentChatId}
@@ -57,12 +63,6 @@ const Root = React.memo((props) => {
 								currentChatId: chatId,
 							}));
 						}}
-						cceAgent={props.cceAgent} />
-				</div>
-				<div className="cce-assistant-root-layout__main">
-					<Chat
-						chatId={globalState.currentChatId}
-						models={globalState.options.models}
 						cceAgent={props.cceAgent} />
 				</div>
 			</div>

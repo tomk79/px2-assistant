@@ -51,4 +51,7 @@ mix
 	// assistantCceFront.js
 	.js('cce/src/assistantCceFront.js', 'cce/front/')
 	.sass('cce/src/assistantCceFront.scss', 'cce/front/')
+	.sass('cce/src/assistantCceFront--auto.scss', 'cce/front/')
+	.sass('cce/src/assistantCceFront--light.scss', 'cce/front/')
+	.sass('cce/src/assistantCceFront--dark.scss', 'cce/front/')
 ;

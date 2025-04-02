@@ -42,7 +42,7 @@ const ChatLogList = React.memo((props) => {
 			<div className="cce-assistant-chatlog-list">
 				<ul className="cce-assistant-chatlog-list__chatlog-list">
 					<li>
-						<button type="button" onClick={() => {props.onStartNewChat();}}>New chat</button>
+						<button type="button" onClick={() => {props.onStartNewChat();}}><span>New chat</span></button>
 					</li>
 					{localState.chatLogList.length > 0 ? (
 						localState.chatLogList.map((chatLog, index) => (
@@ -50,7 +50,7 @@ const ChatLogList = React.memo((props) => {
 								<button
 									type="button"
 									className={`${props.currentChatId == chatLog.chat_id ? 'is-current' : ''}`}
-									onClick={() => {props.onOpenChat(chatLog.chat_id);}}>{chatLog.title}</button>
+									onClick={() => {props.onOpenChat(chatLog.chat_id);}}><span>{chatLog.title}</span></button>
 							</li>
 						))
 					) : <></>}

@@ -342,8 +342,8 @@ Begin!
 			$title = '...';
 			$updated_at = null;
 			if(count($chatContent->messages)){
-				$title = mb_substr($chatContent->messages[0]->content, 0, 24);
-				if (mb_strlen($chatContent->messages[0]->content) > 24) {
+				$title = mb_substr($chatContent->messages[0]->content, 0, 48);
+				if (mb_strlen($chatContent->messages[0]->content) > 48) {
 					$title .= '...';
 				}
 				$updated_at = $chatContent->messages[count($chatContent->messages)-1]->datetime;

@@ -1,0 +1,8 @@
+.cce-assistant-root-layout.cce-assistant-root-layout--auto {
+@media (prefers-color-scheme: light) {
+@import "./includes/components/ChatLogList/ChatLogList--light.scss";
+}
+@media (prefers-color-scheme: dark) {
+@import "./includes/components/ChatLogList/ChatLogList--dark.scss";
+}
+}
