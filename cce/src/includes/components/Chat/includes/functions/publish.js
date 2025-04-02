@@ -18,6 +18,7 @@ class publish {
 					"progress": function(data, error){
 						console.log('--- progress:', data, error);
 					},
+					"timeout": 12 * 60 * 60 * 1000,
 				},
 				function(pxCmdStdOut, error){
 					console.log('---- pxCmdStdOut:', pxCmdStdOut, error);
