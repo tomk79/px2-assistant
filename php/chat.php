@@ -121,10 +121,13 @@ class chat {
 			);
 		}
 
-		$functionCallingPromptMessages = array_merge(
-			$chatlog->messages,
-			$chatlog->temporary_system_prompts
-		);
+		$functionCallingPromptMessages = array();
+		foreach(array_merge( $chatlog->messages, $chatlog->temporary_system_prompts ) as $message){
+			array_push($functionCallingPromptMessages, (object) array(
+				'role' => $message->role,
+				'content' => $message->content,
+			));
+		}
 
 		try {
 			// リクエストを実行
@@ -143,6 +146,7 @@ class chat {
 			if (isset($result->choices[0]->message->content)) {
 
 				$answerMessage = $result->choices[0]->message;
+				$answerMessage->model = $model;
 				$answerMessage->datetime = gmdate('Y-m-d\TH:i:s\Z');
 
 				$parsed_answer = $this->parse_systemanswer($answerMessage->content);
