@@ -28,7 +28,9 @@ class ChatOperator {
 				'model': model || '',
 			}, async (res, error) => {
 				if(error || !res.result){
-					alert('[ERROR] Failed to send message.');
+					console.log('error:', error);
+					reject(`Failed to send message.`);
+					return;
 				}
 				if(res.answer.type == "function_call"){
 					let result = '';

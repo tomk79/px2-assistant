@@ -176,15 +176,19 @@ const Chat = React.memo((props) => {
 								});
 						}
 					}}>
-						<textarea
-							type="text"
-							name="userMessage"
-							placeholder="Input message ..."
-							className="px2-input cce-assistant-chat__input-field"
-							ref={chatInputRef}
-						></textarea>
-						<button type="submit" className="px2-btn px2-btn--primary" ref={sendButtonRef}>Send</button>
-						<div>
+						<div className="px2-p">
+							<div className="px2-input-group px2-input-group--fluid">
+								<textarea
+									type="text"
+									name="userMessage"
+									placeholder="Input message ..."
+									className="px2-input cce-assistant-chat__input-field"
+									ref={chatInputRef}
+								></textarea>
+								<button type="submit" className="px2-btn px2-btn--primary" ref={sendButtonRef}>Send</button>
+							</div>
+						</div>
+						<div className="px2-p">
 							<select name="model" className="px2-input" ref={selectModelRef}>
 								{Object.keys(props.models.chat).map((model, index) => {
 									return (

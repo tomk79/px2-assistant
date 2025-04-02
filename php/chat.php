@@ -92,7 +92,20 @@ class chat {
 		}
 
 
-		if($message->type !== "function_call"){
+		if($message->type == "function_call"){
+			// --------------------
+			// Function Calling の結果を受け取った場合
+			array_push(
+				$chatlog->temporary_system_prompts,
+				(object) array(
+					'role' => 'user',
+					'content' => $message->content,
+					'datetime' => gmdate('Y-m-d\TH:i:s\Z'),
+				)
+			);
+		}else{
+			// --------------------
+			// ユーザーの問い合わせメッセージを受け取った場合
 			array_push(
 				$chatlog->messages,
 				(object) array(
@@ -107,15 +120,6 @@ class chat {
 				(object) array(
 					'role' => 'user',
 					'content' => $this->mk_systemprompt_for_function_calling($message->content),
-					'datetime' => gmdate('Y-m-d\TH:i:s\Z'),
-				)
-			);
-		}else{
-			array_push(
-				$chatlog->temporary_system_prompts,
-				(object) array(
-					'role' => 'user',
-					'content' => $message->content,
 					'datetime' => gmdate('Y-m-d\TH:i:s\Z'),
 				)
 			);
