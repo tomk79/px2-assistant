@@ -398,6 +398,11 @@ return call_user_func( function(){
 							"model" => "gemma3:4B",
 							"label" => "Ollama gemma3:4B",
 						),
+						"ollama-mistral:7B" => array(
+							"url" => "http://localhost:11434/v1/chat/completions",
+							"model" => "mistral:7B",
+							"label" => "Ollama mistral:7B",
+						),
 					),
 				),
 			)),
