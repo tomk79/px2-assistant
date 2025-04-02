@@ -21,7 +21,10 @@ class publish {
 					"timeout": 12 * 60 * 60 * 1000,
 				},
 				function(pxCmdStdOut, error){
-					console.log('---- pxCmdStdOut:', pxCmdStdOut, error);
+					if(error){
+						reject(error);
+						return;
+					}
 					resolve(pxCmdStdOut);
 				});
 		});

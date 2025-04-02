@@ -20,7 +20,10 @@ class clearcache {
 					},
 				},
 				function(pxCmdStdOut, error){
-					console.log('---- pxCmdStdOut:', pxCmdStdOut, error);
+					if(error){
+						reject(error);
+						return;
+					}
 					resolve(pxCmdStdOut);
 				});
 		});
