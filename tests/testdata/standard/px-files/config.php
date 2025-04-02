@@ -368,20 +368,35 @@ return call_user_func( function(){
 			'class_name' => \tomk79\pickles2\assistant\cce\main::register(array(
 				"models" => array(
 					"chat" => array(
-						"openai-gpt-4o-mini" => array(
-							"url" => "https://api.openai.com/v1/chat/completions",
-							"model" => "gpt-4o-mini",
-							"label" => "OpenAI gpt-4o-mini",
-						),
 						"openai-gpt-3.5-turbo" => array(
 							"url" => "https://api.openai.com/v1/chat/completions",
 							"model" => "gpt-3.5-turbo",
 							"label" => "OpenAI gpt-3.5-turbo",
 						),
+						"openai-gpt-4o-mini" => array(
+							"url" => "https://api.openai.com/v1/chat/completions",
+							"model" => "gpt-4o-mini",
+							"label" => "OpenAI gpt-4o-mini",
+						),
 						"ollama-deepseek-r1:14b" => array(
 							"url" => "http://localhost:11434/v1/chat/completions",
 							"model" => "deepseek-r1:14b",
 							"label" => "Ollama deepseek-r1:14b",
+						),
+						"ollama-deepseek-r1:7b" => array(
+							"url" => "http://localhost:11434/v1/chat/completions",
+							"model" => "deepseek-r1:7b",
+							"label" => "Ollama deepseek-r1:7b",
+						),
+						"ollama-llama3.2:3B" => array(
+							"url" => "http://localhost:11434/v1/chat/completions",
+							"model" => "llama3.2:3B",
+							"label" => "Ollama llama3.2:3B",
+						),
+						"ollama-gemma3:4B" => array(
+							"url" => "http://localhost:11434/v1/chat/completions",
+							"model" => "gemma3:4B",
+							"label" => "Ollama gemma3:4B",
 						),
 					),
 				),

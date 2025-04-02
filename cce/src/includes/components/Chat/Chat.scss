@@ -1,8 +1,23 @@
 .cce-assistant-chat {
     margin: 1em 0;
 
+    &__messages {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
     &__message {
         display: flex;
         gap: 10px;
+    }
+    &__message-time {
+        color: #888;
+        font-size: 12px;
+    }
+    &__message-content-body {
+        margin-top: 10px;
+        > *:first-child {
+            margin-top: 0;
+        }
     }
 }

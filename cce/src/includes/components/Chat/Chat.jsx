@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 // import { MainContext } from '../../context/MainContext';
 import ChatOperator from './includes/ChatOperator.js';
+import {marked} from 'marked';
 
 const Chat = React.memo((props) => {
 	// const globalState = useContext(MainContext);
@@ -79,13 +80,32 @@ const Chat = React.memo((props) => {
 				<div className="cce-assistant-chat__messages">
 					{localState.log.length > 0 ? (
 						localState.log.map((message, index) => (
-							<div key={index} className={`cce-assistant-chat__message ${message.role == "assistant" ? 'cce-assistant-chat__message--user' : 'cce-assistant-chat__message--assistant'}`}>
+							<div key={index} className={`cce-assistant-chat__message ${message.role == "assistant" ? 'cce-assistant-chat__message--assistant' : 'cce-assistant-chat__message--user'}`}>
 								<div className="cce-assistant-chat__message-avatar">
 									{message.role == "assistant" ? '🤖' : '👤'}
 								</div>
 								<div className="cce-assistant-chat__message-content">
-									<p>{message.content}</p>
 									<span className="cce-assistant-chat__message-time">{message.datetime}</span>
+									<div
+										 className="cce-assistant-chat__message-content-body"
+										dangerouslySetInnerHTML={{ 
+											__html: ((content) => {
+												marked.setOptions({
+													renderer: new marked.Renderer(),
+													gfm: true,
+													headerIds: false,
+													tables: true,
+													breaks: false,
+													pedantic: false,
+													sanitize: false,
+													smartLists: true,
+													smartypants: false,
+													xhtml: true
+												});
+												return marked.parse(content);
+											})(message.content)
+										}}
+									/>
 								</div>
 							</div>
 						))
