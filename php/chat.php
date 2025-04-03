@@ -154,6 +154,8 @@ class chat {
 
 			// レスポンスを解析
 			if (isset($result->error)) {
+				$chatlog->temporary_system_prompts = array();
+				$this->px->fs()->save_file($realpath_chatlog_json, json_encode($chatlog, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE));
 				return (object) [
 					"type" => "error",
 					"content" => $result->error->message,
