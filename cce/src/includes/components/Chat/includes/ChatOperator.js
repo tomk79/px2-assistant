@@ -13,7 +13,7 @@ class ChatOperator {
 		this.#functions['publish'] = new publish(chatId, cceAgent);
 	}
 
-	async sendMessage (userMessage, model, type) {
+	async sendMessage (userMessage, model, type, calledFunctionName, calledFunctionId) {
 		return new Promise((resolve, reject) => {
 			if (!userMessage) {
 				reject('No message given.');
@@ -23,6 +23,8 @@ class ChatOperator {
 				'message': {
 					"chat_id": this.#chatId,
 					"type": type || "question",
+					"name": calledFunctionName || "",
+					"call_id": calledFunctionId || "",
 					"content": userMessage,
 				},
 				'model': model || '',
@@ -40,7 +42,7 @@ class ChatOperator {
 					}else{
 						result = '[Error] undefined function.';
 					}
-					this.sendMessage(result, model, 'function_call')
+					this.sendMessage(result, model, 'function_call', res.answer.function, res.answer.call_id)
 						.then((answer) => {
 							resolve(answer);
 						});

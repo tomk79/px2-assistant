@@ -98,7 +98,9 @@ class chat {
 			array_push(
 				$chatlog->temporary_system_prompts,
 				(object) array(
-					'role' => 'user',
+					'role' => 'tool',
+					'tool_call_id' => $message->call_id,
+					'name' => $message->function ?? null,
 					'content' => $message->content ?? '',
 					'datetime' => gmdate('Y-m-d\TH:i:s\Z'),
 				)
@@ -118,7 +120,7 @@ class chat {
 			array_push(
 				$chatlog->temporary_system_prompts,
 				(object) array(
-					'role' => 'user',
+					'role' => 'system',
 					'content' => $this->mk_systemprompt_for_function_calling($message->content ?? ''),
 					'datetime' => gmdate('Y-m-d\TH:i:s\Z'),
 				)
@@ -127,10 +129,20 @@ class chat {
 
 		$functionCallingPromptMessages = array();
 		foreach(array_merge( $chatlog->messages, $chatlog->temporary_system_prompts ) as $message){
-			array_push($functionCallingPromptMessages, (object) array(
+			$message_row = (object) array(
 				'role' => $message->role,
-				'content' => $message->content,
-			));
+				'content' => $message->content ?? '',
+			);
+			if( isset($message->name) ){
+				$message_row->name = $message->name;
+			}
+			if( isset($message->tool_call_id) ){
+				$message_row->tool_call_id = $message->tool_call_id;
+			}
+			if( isset($message->tool_calls) ){
+				$message_row->tool_calls = $message->tool_calls;
+			}
+			array_push($functionCallingPromptMessages, $message_row);
 		}
 
 		try {
@@ -155,9 +167,23 @@ class chat {
 
 				$parsed_answer = $this->parse_systemanswer($answerMessage->content);
 				if( $parsed_answer->type == 'function_call' ){
+					$function_call_id = 'call_'.bin2hex(random_bytes(10));
 					array_push(
 						$chatlog->temporary_system_prompts,
-						$answerMessage
+						(object) array(
+							"role" => "assistant",
+							"content" => $answerMessage->content,
+							"tool_calls" => array(
+								(object) array(
+									"id" => $function_call_id,
+									"type" => "function",
+									"function" => (object) array(
+										"name" => $parsed_answer->function,
+										"arguments" => json_encode($parsed_answer->args),
+									),
+								),
+							),
+						),
 					);
 					$this->px->fs()->save_file($realpath_chatlog_json, json_encode($chatlog, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE));
 
@@ -166,6 +192,7 @@ class chat {
 						"role" => "assistant",
 						"function" => $parsed_answer->function,
 						"args" => $parsed_answer->args,
+						"call_id" => $function_call_id,
 					];
 				}
 
@@ -244,7 +271,6 @@ class chat {
 
 	private function mk_systemprompt_for_function_calling($messageContent){
 		ob_start(); ?>
-[System message]
 You are a helpful assistant.
 
 You have access to the following tools:
@@ -275,9 +301,6 @@ Else if, you can answer the question directly, use the following format:
 You can also ask the user for more information if needed.
 
 Begin!
-
-[User message]
-<?= $messageContent ?>
 <?php
 		$systemMessage = ob_get_clean();
 		return $systemMessage;
