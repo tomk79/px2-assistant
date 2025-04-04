@@ -120,7 +120,7 @@ class chat {
 			array_push(
 				$chatlog->temporary_system_prompts,
 				(object) array(
-					'role' => 'user', // NOTE: 'system' にしたいところだが、Mistral:7B など一部のモデルで動かなくなるため、'user' にしておく
+					'role' => 'system',
 					'content' => $this->mk_systemprompt_for_function_calling($message->content ?? ''),
 					'datetime' => gmdate('Y-m-d\TH:i:s\Z'),
 				)
