@@ -1,4 +1,5 @@
 import clearcache from './functions/clearcache.js';
+import getConfig from './functions/getConfig.js';
 import publish from './functions/publish.js';
 import whatTimeIsIt from './functions/whatTimeIsIt.js';
 
@@ -11,6 +12,7 @@ class ChatOperator {
 		this.#chatId = chatId;
 		this.#cceAgent = cceAgent;
 		this.#functions['clearcache'] = new clearcache(chatId, cceAgent);
+		this.#functions['getConfig'] = new getConfig(chatId, cceAgent);
 		this.#functions['publish'] = new publish(chatId, cceAgent);
 		this.#functions['whatTimeIsIt'] = new whatTimeIsIt(chatId, cceAgent);
 	}
