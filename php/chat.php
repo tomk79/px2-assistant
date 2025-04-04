@@ -120,7 +120,7 @@ class chat {
 			array_push(
 				$chatlog->temporary_system_prompts,
 				(object) array(
-					'role' => 'system',
+					'role' => 'user', // NOTE: 'system' にしたいところだが、Mistral:7B など一部のモデルで動かなくなるため、'user' にしておく
 					'content' => $this->mk_systemprompt_for_function_calling($message->content ?? ''),
 					'datetime' => gmdate('Y-m-d\TH:i:s\Z'),
 				)
@@ -273,6 +273,7 @@ class chat {
 
 	private function mk_systemprompt_for_function_calling($messageContent){
 		ob_start(); ?>
+[System message]
 You are a helpful assistant.
 
 You have access to the following tools:
@@ -303,6 +304,9 @@ Else if, you can answer the question directly, use the following format:
 You can also ask the user for more information if needed.
 
 Begin!
+
+[User message]
+<?= $messageContent ?>
 <?php
 		$systemMessage = ob_get_clean();
 		return $systemMessage;
