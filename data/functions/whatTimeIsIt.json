@@ -1,0 +1,11 @@
+{
+	"type": "function",
+	"name": "whatTimeIsIt",
+	"description": "Gets the current time.",
+	"parameters": {
+		"type": "object",
+		"properties": {
+		},
+		"required": []
+	}
+}
