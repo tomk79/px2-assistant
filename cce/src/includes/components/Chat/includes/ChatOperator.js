@@ -1,5 +1,6 @@
 import clearcache from './functions/clearcache.js';
 import publish from './functions/publish.js';
+import whatTimeIsIt from './functions/whatTimeIsIt.js';
 
 class ChatOperator {
 	#chatId;
@@ -11,6 +12,7 @@ class ChatOperator {
 		this.#cceAgent = cceAgent;
 		this.#functions['clearcache'] = new clearcache(chatId, cceAgent);
 		this.#functions['publish'] = new publish(chatId, cceAgent);
+		this.#functions['whatTimeIsIt'] = new whatTimeIsIt(chatId, cceAgent);
 	}
 
 	async sendMessage (userMessage, model, type) {
