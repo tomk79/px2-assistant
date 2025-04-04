@@ -289,12 +289,12 @@ Begin!
 		preg_match('/<Thought>(.*?)<\/Thought>/si', $answer, $matched);
 		$thought = '';
 		if( isset($matched[1]) && strlen($matched[1]) ){
-			$thought = $matched[1];
+			$thought = trim($matched[1]);
 		}
 		preg_match('/<Function>(.*?)<\/Function>/si', $answer, $matched);
 		$function = '';
 		if( isset($matched[1]) && strlen($matched[1]) ){
-			$function = $matched[1];
+			$function = trim($matched[1]);
 		}
 		preg_match('/<Args>(.*?)(?:<\/Args>|\`\`\`*\s*$|$)/si', $answer, $matched);
 		$args = (object) array();
@@ -307,7 +307,7 @@ Begin!
 		preg_match('/<FinalAnswer>(.*?)(?:<\/FinalAnswer>|\`\`\`*\s*$|$)/si', $answer, $matched);
 		$final_answer = '';
 		if( isset($matched[1]) && strlen($matched[1]) ){
-			$final_answer = $matched[1];
+			$final_answer = trim($matched[1]);
 		}
 
 		if( $function ){
