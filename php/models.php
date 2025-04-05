@@ -98,6 +98,16 @@ class models {
 						// NOTE: `system` や `tool` などの値は、Gemma3:4B, Mistral:7B など、一部のモデル(Ollama？)で扱えない場合があるので、 `user` に置換する。
 						// NOTE: 逆に、OpenAI の API では、`system` や `tool` を正しく与えないとエラーを返してくる。
 				}
+				if($api_type == 'anthoropic'){
+					if( $promptMessage->tool_calls ?? null ){
+						unset($promptMessage->tool_calls);
+							// NOTE: Anthoropic API では、`tool_calls` を与えるとエラーになる。
+					}
+					if( $promptMessage->tool_call_id ?? null ){
+						unset($promptMessage->tool_call_id);
+							// NOTE: Anthoropic API では、`tool_call_id` を与えるとエラーになる。
+					}
+				}
 			}
 		}
 
@@ -130,14 +140,25 @@ class models {
 		// モデルの違いによる互換性の問題を吸収する
 		if($api_type == 'anthoropic'){
 			$result->choices = array();
-			array_push($result->choices, (object) array(
-				"message" => (object) array(
-					"role" => $result->role,
-					"content" => $result->content[0]->text ?? '',
-					"refusal" => null,
-					"annotations" => []
-				),
-			));
+			if($result->type == "error"){
+				array_push($result->choices, (object) array(
+					"message" => (object) array(
+						"role" => $result->role ?? 'assistant',
+						"content" => '[ERROR] '.$result->error->message,
+						"refusal" => null,
+						"annotations" => []
+					),
+				));
+			}else{
+				array_push($result->choices, (object) array(
+					"message" => (object) array(
+						"role" => $result->role ?? 'assistant',
+						"content" => $result->content[0]->text ?? '',
+						"refusal" => null,
+						"annotations" => []
+					),
+				));
+			}
 			unset($result->role, $result->content);
 		}
 
