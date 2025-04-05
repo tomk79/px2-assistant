@@ -26,6 +26,22 @@ const Chat = React.memo((props) => {
 		return `${YYYYMMDD}-${randomString}`;
 	};
 
+	function markdownToHtml(content) {
+		marked.setOptions({
+			renderer: new marked.Renderer(),
+			gfm: true,
+			headerIds: false,
+			tables: true,
+			breaks: false,
+			pedantic: false,
+			sanitize: false,
+			smartLists: true,
+			smartypants: false,
+			xhtml: true
+		});
+		return marked.parse(content);
+	}
+
 	useEffect(() => {
 		const chatId = props.chatId || generateNewChatId();
 
@@ -85,21 +101,7 @@ const Chat = React.memo((props) => {
 									<div
 										 className="cce-assistant-chat__message-content-body"
 										dangerouslySetInnerHTML={{ 
-											__html: ((content) => {
-												marked.setOptions({
-													renderer: new marked.Renderer(),
-													gfm: true,
-													headerIds: false,
-													tables: true,
-													breaks: false,
-													pedantic: false,
-													sanitize: false,
-													smartLists: true,
-													smartypants: false,
-													xhtml: true
-												});
-												return marked.parse(content);
-											})(message.content)
+											__html: (markdownToHtml(message.content[0].text || message.content))
 										}}
 									/>
 								</div>

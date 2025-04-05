@@ -19,7 +19,7 @@ class ChatOperator {
 
 	async sendMessage (userMessage, model, type, calledFunctionName, calledFunctionId) {
 		return new Promise((resolve, reject) => {
-			if (!userMessage) {
+			if (!userMessage || !userMessage.length) {
 				reject('No message given.');
 			}
 			this.#cceAgent.gpi({
@@ -29,7 +29,7 @@ class ChatOperator {
 					"type": type || "question",
 					"name": calledFunctionName || "",
 					"call_id": calledFunctionId || "",
-					"content": userMessage,
+					"content": userMessage || [],
 				},
 				'model': model || '',
 			}, async (res, error) => {
@@ -39,12 +39,20 @@ class ChatOperator {
 					return;
 				}
 				if(res.answer.type == "function_call"){
-					let result = '';
-					if( this.#functions[res.answer.functions[0].function] ){
-						result = await this.#functions[res.answer.functions[0].function].run(res.answer.functions[0].args)
-							.catch(e => e);
-					}else{
-						result = '[Error] undefined function.';
+					let result = [];
+					for(let i = 0; i < res.answer.functions.length; i++){
+						if( this.#functions[res.answer.functions[i].function] ){
+							result.push({
+								"type": "text",
+								"text": await this.#functions[res.answer.functions[i].function].run(res.answer.functions[i].args)
+									.catch(e => e),
+							});
+						}else{
+							result.push({
+								"type": "text",
+								"text": '[Error] undefined function.',
+							});
+						}
 					}
 					this.sendMessage(result, model, 'function_call', res.answer.functions[0].function, res.answer.call_id)
 						.then((answer) => {

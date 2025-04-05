@@ -91,6 +91,15 @@ class chat {
 			$chatlog = json_decode( $this->px->fs()->read_file($realpath_chatlog_json) );
 		}
 
+		$messageContents = $message->content ?? array();
+		if( is_string($messageContents) ){
+			$messageContents = array(
+				(object) array(
+					"type" => "text",
+					"text" => $messageContents,
+				),
+			);
+		}
 
 		if($message->type == "function_call"){
 			// --------------------
@@ -101,7 +110,7 @@ class chat {
 					'role' => 'tool',
 					'tool_call_id' => $message->call_id,
 					'name' => $message->function ?? null,
-					'content' => $message->content ?? '',
+					'content' => $messageContents,
 					'datetime' => gmdate('Y-m-d\TH:i:s\Z'),
 				)
 			);
@@ -112,16 +121,17 @@ class chat {
 				$chatlog->messages,
 				(object) array(
 					'role' => 'user',
-					'content' => $message->content ?? '',
+					'content' => $messageContents,
 					'datetime' => gmdate('Y-m-d\TH:i:s\Z'),
 				)
 			);
+
 			// Function Calling Prompt を作成する
 			array_push(
 				$chatlog->temporary_system_prompts,
 				(object) array(
 					'role' => 'system',
-					'content' => $this->mk_systemprompt_for_function_calling($message->content ?? ''),
+					'content' => $this->mk_systemprompt_for_function_calling($messageContents),
 					'datetime' => gmdate('Y-m-d\TH:i:s\Z'),
 				)
 			);
@@ -272,7 +282,7 @@ class chat {
 		return $function_list;
 	}
 
-	private function mk_systemprompt_for_function_calling($messageContent){
+	private function mk_systemprompt_for_function_calling($messageContents){
 		ob_start(); ?>
 [System message]
 You are a helpful assistant.
@@ -311,7 +321,15 @@ You can also ask the user for more information if needed.
 Begin!
 
 [User message]
-<?= $messageContent ?>
+<?php
+	if( is_string($messageContents) ){
+		echo ($messageContents ?? '')."\n";
+	}elseif( is_array($messageContents)){
+		foreach($messageContents as $messageContent){
+			echo ($messageContent->text ?? '')."\n";
+		}
+	}
+?>
 <?php
 		$systemMessage = ob_get_clean();
 		return $systemMessage;
@@ -386,9 +404,16 @@ Begin!
 			$title = '...';
 			$updated_at = null;
 			if(count($chatContent->messages)){
-				$title = mb_substr($chatContent->messages[0]->content, 0, 48);
-				if (mb_strlen($chatContent->messages[0]->content) > 48) {
-					$title .= '...';
+				if( is_string($chatContent->messages[0]->content ?? null) ){
+					$title = mb_substr($chatContent->messages[0]->content, 0, 48);
+					if (mb_strlen($chatContent->messages[0]->content) > 48) {
+						$title .= '...';
+					}
+				}elseif( is_array($chatContent->messages[0]->content ?? null) ){
+					$title = mb_substr($chatContent->messages[0]->content[0]->text, 0, 48);
+					if (mb_strlen($chatContent->messages[0]->content[0]->text) > 48) {
+						$title .= '...';
+					}
 				}
 				$updated_at = $chatContent->messages[count($chatContent->messages)-1]->datetime;
 			}
