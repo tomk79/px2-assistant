@@ -28,10 +28,6 @@ const Chat = React.memo((props) => {
 
 	useEffect(() => {
 		const chatId = props.chatId || generateNewChatId();
-		setLocalState(prevState => ({
-			...prevState,
-		}));
-
 
 		if(!props.chatId){
 			setLocalState(prevState => ({
@@ -173,6 +169,10 @@ const Chat = React.memo((props) => {
 
 									inputElement.value = '';
 									inputElement.focus();
+
+									props.onupdatechat({
+										currentChatId: localState.chatId,
+									});
 								});
 						}
 					}}>

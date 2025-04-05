@@ -7,6 +7,7 @@ import Chat from './components/Chat/Chat.jsx';
 const Root = React.memo((props) => {
 	const [globalState, setGlobalState] = useState({
 		currentChatId: null,
+		chatUpdatedAt: null,
 		options: null,
 	});
 	globalState.cceAgent = props.cceAgent;
@@ -46,11 +47,19 @@ const Root = React.memo((props) => {
 					<Chat
 						chatId={globalState.currentChatId}
 						models={globalState.options.models}
+						onupdatechat={event => {
+							setGlobalState(prevState => ({
+								...prevState,
+								currentChatId: event.currentChatId,
+								chatUpdatedAt: Date.now(),
+							}));
+						}}
 						cceAgent={props.cceAgent} />
 				</div>
 				<div className="cce-assistant-root-layout__sidebar">
 					<ChatLogList
 						currentChatId={globalState.currentChatId}
+						chatUpdatedAt={globalState.chatUpdatedAt}
 						onStartNewChat={() => {
 							setGlobalState(prevState => ({
 								...prevState,
