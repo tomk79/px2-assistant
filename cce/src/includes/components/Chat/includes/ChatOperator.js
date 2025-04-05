@@ -40,13 +40,13 @@ class ChatOperator {
 				}
 				if(res.answer.type == "function_call"){
 					let result = '';
-					if( this.#functions[res.answer.function] ){
-						result = await this.#functions[res.answer.function].run(res.answer.args)
+					if( this.#functions[res.answer.functions[0].function] ){
+						result = await this.#functions[res.answer.functions[0].function].run(res.answer.functions[0].args)
 							.catch(e => e);
 					}else{
 						result = '[Error] undefined function.';
 					}
-					this.sendMessage(result, model, 'function_call', res.answer.function, res.answer.call_id)
+					this.sendMessage(result, model, 'function_call', res.answer.functions[0].function, res.answer.call_id)
 						.then((answer) => {
 							resolve(answer);
 						});

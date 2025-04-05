@@ -170,30 +170,31 @@ class chat {
 				$parsed_answer = $this->parse_systemanswer($answerMessage->content);
 				if( $parsed_answer->type == 'function_call' ){
 					$function_call_id = 'call_'.bin2hex(random_bytes(10));
-					array_push(
-						$chatlog->temporary_system_prompts,
-						(object) array(
-							"role" => "assistant",
-							"content" => $answerMessage->content,
-							"tool_calls" => array(
-								(object) array(
-									"id" => $function_call_id,
-									"type" => "function",
-									"function" => (object) array(
-										"name" => $parsed_answer->function,
-										"arguments" => json_encode($parsed_answer->args),
+					foreach($parsed_answer->functions as $parsed_answer_function){
+						array_push(
+							$chatlog->temporary_system_prompts,
+							(object) array(
+								"role" => "assistant",
+								"content" => $answerMessage->content,
+								"tool_calls" => array(
+									(object) array(
+										"id" => $function_call_id,
+										"type" => "function",
+										"function" => (object) array(
+											"name" => $parsed_answer_function->function,
+											"arguments" => json_encode($parsed_answer_function->args),
+										),
 									),
 								),
 							),
-						),
-					);
+						);
+					}
 					$this->px->fs()->save_file($realpath_chatlog_json, json_encode($chatlog, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE));
 
 					return (object) [
 						"type" => "function_call",
 						"role" => "assistant",
-						"function" => $parsed_answer->function,
-						"args" => $parsed_answer->args,
+						"functions" => $parsed_answer->functions,
 						"call_id" => $function_call_id,
 					];
 				}
@@ -280,17 +281,21 @@ You have access to the following tools:
 
 <?php
 	$function_list = $this->get_function_list();
+	$function_name_list = array();
 	foreach($function_list as $function){
 		echo '- '.$function->name.': '.$function->description.', args: '.json_encode($function->parameters->properties)."\n";
+		array_push($function_name_list, $function->name);
 	}
 ?>
 
 If you need to use any tool, use the following format:
 
 ```
-<Thought>I need to solve this problem step-by-step.</Thought>
-<Function>the function to take, should be one of [calculator, weather]</Function>
-<Args>the input to the function as a JSON object.</Args>
+<FunctionCalling>
+  <Thought>I need to solve this problem step-by-step.</Thought>
+  <Function>the function to take, should be one of [<?= implode(', ', $function_name_list) ?>]</Function>
+  <Args>the input to the function as a JSON object.</Args>
+</FunctionCalling>
 ```
 
 Then the tool provides the output in the next message.
@@ -313,35 +318,45 @@ Begin!
 	}
 
 	private function parse_systemanswer($answer){
-		preg_match('/<Thought>(.*?)<\/Thought>/si', $answer, $matched);
-		$thought = '';
-		if( isset($matched[1]) && strlen($matched[1]) ){
-			$thought = trim($matched[1]);
-		}
-		preg_match('/<Function>(.*?)<\/Function>/si', $answer, $matched);
-		$function = '';
-		if( isset($matched[1]) && strlen($matched[1]) ){
-			$function = trim($matched[1]);
-		}
-		preg_match('/<Args>(.*?)(?:<\/Args>|\`\`\`*\s*$|$)/si', $answer, $matched);
-		$args = (object) array();
-		if( isset($matched[1]) && strlen($matched[1]) ){
-			$args = json_decode($matched[1]);
-			if( !is_object($args) ){
+		$functions = array();
+		if(preg_match_all('/<FunctionCalling>(.*?)<\/FunctionCalling>/si', $answer, $matchedAll)){
+			foreach($matchedAll[1] as $matchedTagStr){
+				preg_match('/<Thought>(.*?)<\/Thought>/si', $matchedTagStr, $matched);
+				$thought = '';
+				if( isset($matched[1]) && strlen($matched[1]) ){
+					$thought = trim($matched[1]);
+				}
+				preg_match('/<Function>(.*?)<\/Function>/si', $matchedTagStr, $matched);
+				$function = '';
+				if( isset($matched[1]) && strlen($matched[1]) ){
+					$function = trim($matched[1]);
+				}
+				preg_match('/<Args>(.*?)(?:<\/Args>|\`\`\`*\s*$|$)/si', $matchedTagStr, $matched);
 				$args = (object) array();
+				if( isset($matched[1]) && strlen($matched[1]) ){
+					$args = json_decode($matched[1]);
+					if( !is_object($args) ){
+						$args = (object) array();
+					}
+				}
+				array_push($functions, (object) array(
+					'thought' => $thought,
+					'function' => $function,
+					'args' => $args,
+				));
 			}
 		}
+
 		preg_match('/<FinalAnswer>(.*?)(?:<\/FinalAnswer>|\`\`\`*\s*$|$)/si', $answer, $matched);
 		$final_answer = '';
 		if( isset($matched[1]) && strlen($matched[1]) ){
 			$final_answer = trim($matched[1]);
 		}
 
-		if( $function ){
+		if( count($functions) ){
 			return (object) array(
 				'type' => 'function_call',
-				'function' => $function,
-				'args' => $args,
+				'functions' => $functions,
 			);
 		}
 		if( $final_answer ){
