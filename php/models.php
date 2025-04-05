@@ -55,16 +55,24 @@ class models {
 		$headers = array();
 		array_push($headers, 'Content-Type: application/json');
 
+		$url_endpoint = $selectedModel->url;
+
 		// --------------------------------------
 		// サービス別の認証情報を設定
 		if( preg_match('/^https\:\/\/api\.openai\.com/', $selectedModel->url) ){
 			// OpenAI API
 			$api_type = 'openai';
-			if( strlen($_ENV['OPEN_AI_SECRET'] ?? '') ){
-				array_push($headers, 'Authorization: Bearer '.($_ENV['OPEN_AI_SECRET']));
+			if( strlen($_ENV[$selectedModel->api_key ?? 'OPENAI_API_KEY'] ?? '') ){
+				array_push($headers, 'Authorization: Bearer '.($_ENV[$selectedModel->api_key ?? 'OPENAI_API_KEY']));
 			}
-			if( strlen($_ENV['OPEN_AI_ORG_ID'] ?? '') ){
-				array_push($headers, 'OpenAI-Organization: '.($_ENV['OPEN_AI_ORG_ID'] ?? null));
+			if( strlen($_ENV[$selectedModel->org_id ?? 'OPENAI_ORG_ID'] ?? '') ){
+				array_push($headers, 'OpenAI-Organization: '.($_ENV[$selectedModel->org_id ?? 'OPENAI_ORG_ID'] ?? null));
+			}
+		}elseif( preg_match('/^https\:\/\/generativelanguage\.googleapis\.com\/[a-zA-Z0-9]+\/openai\//', $selectedModel->url) ){
+			// Google Gemini API (OpenAI compatible)
+			$api_type = 'openai';
+			if( strlen($_ENV[$selectedModel->api_key ?? 'GEMINI_API_KEY'] ?? '') ){
+				array_push($headers, 'Authorization: Bearer '.($_ENV[$selectedModel->api_key ?? 'GEMINI_API_KEY']));
 			}
 		}
 
@@ -85,7 +93,7 @@ class models {
 		// --------------------------------------
 		// リクエストを実行
 		$response = file_get_contents(
-			$selectedModel->url,
+			$url_endpoint,
 			false,
 			stream_context_create(array(
 				'http' => array(
@@ -99,7 +107,7 @@ class models {
 						"max_tokens" => 1000,
 					)),
 					'ignore_errors' => true,
-				)
+				),
 			))
 		);
 		$result = json_decode($response);

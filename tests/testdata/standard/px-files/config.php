@@ -372,11 +372,21 @@ return call_user_func( function(){
 							"url" => "https://api.openai.com/v1/chat/completions",
 							"model" => "gpt-3.5-turbo",
 							"label" => "OpenAI gpt-3.5-turbo",
+							"api_key" => "OPENAI_API_KEY",
+							"org_id" => "OPENAI_ORG_ID",
 						),
 						"openai-gpt-4o-mini" => array(
 							"url" => "https://api.openai.com/v1/chat/completions",
 							"model" => "gpt-4o-mini",
 							"label" => "OpenAI gpt-4o-mini",
+							"api_key" => "OPENAI_API_KEY",
+							"org_id" => "OPENAI_ORG_ID",
+						),
+						"google-gemini-2.0-flash" => array(
+							"url" => "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+							"model" => "gemini-2.0-flash",
+							"label" => "Google gemini-2.0-flash",
+							"api_key" => "GEMINI_API_KEY",
 						),
 						"ollama-deepseek-r1:14b" => array(
 							"url" => "http://localhost:11434/v1/chat/completions",

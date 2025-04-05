@@ -7,8 +7,6 @@ const ChatLogList = React.memo((props) => {
 	});
 
 	useEffect(() => {
-console.log('useEffect()');
-
 		props.cceAgent.gpi({
 			'command': 'get-chatlog-list',
 		}, function(res, error){
@@ -22,7 +20,6 @@ console.log('useEffect()');
 				chatLogList: res.chatLogList,
 				isInitialized: true,
 			}));
-console.log('res.chatLogList:', res.chatLogList);
 		});
 
 		// clean up
