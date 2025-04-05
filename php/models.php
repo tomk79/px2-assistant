@@ -62,17 +62,30 @@ class models {
 		if( preg_match('/^https\:\/\/api\.openai\.com/', $selectedModel->url) ){
 			// OpenAI API
 			$api_type = 'openai';
-			if( strlen($_ENV[$selectedModel->api_key ?? 'OPENAI_API_KEY'] ?? '') ){
-				array_push($headers, 'Authorization: Bearer '.($_ENV[$selectedModel->api_key ?? 'OPENAI_API_KEY']));
+			$api_key = $_ENV[$selectedModel->api_key ?? 'OPENAI_API_KEY'] ?? $selectedModel->api_key ?? null;
+			$openai_org_id = $_ENV[$selectedModel->org_id ?? 'OPENAI_ORG_ID'] ?? $selectedModel->org_id ?? null;
+			if( strlen($api_key ?? '') ){
+				array_push($headers, 'Authorization: Bearer '.($api_key));
 			}
-			if( strlen($_ENV[$selectedModel->org_id ?? 'OPENAI_ORG_ID'] ?? '') ){
-				array_push($headers, 'OpenAI-Organization: '.($_ENV[$selectedModel->org_id ?? 'OPENAI_ORG_ID'] ?? null));
+			if( strlen($openai_org_id ?? '') ){
+				array_push($headers, 'OpenAI-Organization: '.($openai_org_id ?? null));
 			}
 		}elseif( preg_match('/^https\:\/\/generativelanguage\.googleapis\.com\/[a-zA-Z0-9]+\/openai\//', $selectedModel->url) ){
 			// Google Gemini API (OpenAI compatible)
 			$api_type = 'openai';
-			if( strlen($_ENV[$selectedModel->api_key ?? 'GEMINI_API_KEY'] ?? '') ){
-				array_push($headers, 'Authorization: Bearer '.($_ENV[$selectedModel->api_key ?? 'GEMINI_API_KEY']));
+			$api_key = $_ENV[$selectedModel->api_key ?? 'GEMINI_API_KEY'] ?? $selectedModel->api_key ?? null;
+			if( strlen($api_key ?? '') ){
+				array_push($headers, 'Authorization: Bearer '.($api_key));
+			}
+		}elseif( preg_match('/^https\:\/\/api\.anthropic\.com/', $selectedModel->url) ){
+			// Anthoropic API
+			$api_type = 'anthoropic';
+			$api_key = $_ENV[$selectedModel->api_key ?? 'ANTHOROPIC_API_KEY'] ?? $selectedModel->api_key ?? null;
+			if( strlen($api_key ?? '') ){
+				array_push($headers, 'x-api-key: '.($api_key));
+			}
+			if( strlen($selectedModel->anthropic_version ?? '') ){
+				array_push($headers, 'anthropic-version: '.($selectedModel->anthropic_version));
 			}
 		}
 
@@ -111,8 +124,22 @@ class models {
 			))
 		);
 		$result = json_decode($response);
-
 		set_time_limit(30);
+
+		// --------------------------------------
+		// モデルの違いによる互換性の問題を吸収する
+		if($api_type == 'anthoropic'){
+			$result->choices = array();
+			array_push($result->choices, (object) array(
+				"message" => (object) array(
+					"role" => $result->role,
+					"content" => $result->content[0]->text ?? '',
+					"refusal" => null,
+					"annotations" => []
+				),
+			));
+			unset($result->role, $result->content);
+		}
 
 		return $result;
 	}

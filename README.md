@@ -35,12 +35,20 @@ composer require tomk79/px2-assistant
 	);
 ```
 
-OpenAI のモデルを使用するには、環境変数 `$_ENV['OPENAI_API_KEY']`、 `$_ENV['OPENAI_ORG_ID']` にアクセスキーをセットしてください。
+OpenAI、 Google、 Anthoropic のモデルを使用するには、次の環境変数にアクセスキーをセットしてください。
 
 ```ini
 # .env
+
+# OpenAI
 OPENAI_API_KEY="xx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-OPENAI_ORG_ID="org-xxxxxxxxxxxxxx"
+OPENAI_ORG_ID="org-xxxxxxxxxxxxxx" # optional
+
+# Google Gemini
+GEMINI_API_KEY="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+# Anthoropic Claude
+ANTHOROPIC_API_KEY="xx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ```
 
 ## 更新履歴 - Change log
