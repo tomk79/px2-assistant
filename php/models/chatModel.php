@@ -1,13 +1,13 @@
 <?php
 /**
- * px2-assistant
+ * chatModel
  */
-namespace tomk79\pickles2\assistant;
+namespace tomk79\pickles2\assistant\models;
 
 /**
- * models.php
+ * chatModel.php
  */
-class models {
+class chatModel {
 
 	/** Picklesオブジェクト */
 	private $px;
@@ -30,16 +30,19 @@ class models {
 	}
 
 	/**
-	 * モデルを実行する
+	 * チャットメッセージを送信する
+	 *
 	 * @param string $modelName モデル名
-	 * @param array $promptMessages プロンプトメッセージ
+	 * @param array $promptOrigMessages プロンプトメッセージ
 	 * @param array $options オプション
 	 * @return object 返答メッセージ
 	 */
-	public function send_chat_message($modelName, $promptMessages, $options = array()) {
+	public function send_message($modelName, $promptOrigMessages, $options = array()) {
 		$options = $options ?? array();
 		$options['temperature'] = $options['temperature'] ?? 0;
 		$options['max_tokens'] = $options['max_tokens'] ?? 2000;
+
+		$promptMessages = json_decode(json_encode($promptOrigMessages));
 
 		$selectedModel = $this->models->chat->{$modelName} ?? null;
 		if(!$selectedModel){
@@ -106,6 +109,22 @@ class models {
 					if( $promptMessage->tool_call_id ?? null ){
 						unset($promptMessage->tool_call_id);
 							// NOTE: Anthoropic API では、`tool_call_id` を与えるとエラーになる。
+					}
+					if( is_array($promptMessage->content) ){
+						foreach($promptMessage->content as $promptMessageContent){
+							if( $promptMessageContent->type == 'image_url' ){
+								// NOTE: Anthoropic API では、`image_url` は受け取れない。
+								$promptMessageContent->type = 'image';
+								preg_match('/^data\:([a-zA-Z0-9\-\_]+\/[a-zA-Z0-9\-\_]+)\;([a-zA-Z0-9\-\_]+)\,(.*)$/', $promptMessageContent->image_url->url ?? '', $tmpMatched);
+								$promptMessageContent->source = (object) array(
+									"type" => $tmpMatched[2],
+									"media_type" => $tmpMatched[1],
+									"data" => $tmpMatched[3],
+								);
+								unset($promptMessageContent->image_url);
+								unset($tmpMatched);
+							}
+						}
 					}
 				}
 			}

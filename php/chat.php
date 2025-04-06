@@ -16,7 +16,7 @@ class chat {
 	private $main;
 
 	/** モデル管理オブジェクト */
-	private $models;
+	private $chatModel;
 
 	/** データディレクトリ */
 	private $realpath_data_dir;
@@ -28,7 +28,7 @@ class chat {
 	public function __construct( $main ){
 		$this->main = $main;
 		$this->px = $this->main->px();
-		$this->models = new models($main);
+		$this->chatModel = new models\chatModel($main);
 
 		$this->realpath_data_dir = $this->main->get_realpath_data_dir();
 	}
@@ -157,7 +157,7 @@ class chat {
 
 		try {
 			// リクエストを実行
-			$result = $this->models->send_chat_message(
+			$result = $this->chatModel->send_message(
 				$model,
 				$functionCallingPromptMessages
 			);
