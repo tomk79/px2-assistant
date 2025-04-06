@@ -55,4 +55,9 @@
         right: -4px;
         cursor: pointer;
     }
+    &__add {
+        input[type="file"] {
+            display: none;
+        }
+    }
 }

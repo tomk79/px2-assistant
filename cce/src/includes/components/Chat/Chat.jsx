@@ -17,6 +17,7 @@ const Chat = React.memo((props) => {
 	const chatInputRef = useRef(null);
 	const selectModelRef = useRef(null);
 	const sendButtonRef = useRef(null);
+	const newAttachmentRef = useRef(null);
 
 	const localFileUtils = new LocalFileUtils();
 
@@ -242,7 +243,7 @@ const Chat = React.memo((props) => {
 							<div className="px2-input-group px2-input-group--fluid">
 								<textarea
 									type="text"
-									name="userMessage"
+									name="cce-assistant-chat-user-message"
 									placeholder="Input message ..."
 									className="px2-input cce-assistant-chat__input-field"
 									ref={chatInputRef}
@@ -250,32 +251,59 @@ const Chat = React.memo((props) => {
 								<button type="submit" className="px2-btn px2-btn--primary" ref={sendButtonRef}>Send</button>
 							</div>
 						</div>
-						{localState.files.length ?
-							<div className="cce-assistant-chat-attachfiles">
-								<ul>
-								{localState.files.map((file, index) => {
-									return (
-										<li key={index}>
-											<img src={file.base64} alt="" />
-											<button
-												type="button"
-												className={`cce-assistant-chat-attachfiles__btn-delete`}
-												onClick={(event) => {
-													setLocalState(prevState => {
-														prevState.files.splice(index, 1);
-														return {
-															...prevState,
-														};
-													});
-												}}
-												title={"Delete"}
-												>✗</button>
-										</li>
-									);
-								})}
-								</ul>
-							</div>
-						: <></>}
+						<div className="cce-assistant-chat-attachfiles">
+							<ul>
+							{localState.files.map((file, index) => {
+								return (
+									<li key={index}>
+										<img src={file.base64} alt="" />
+										<button
+											type="button"
+											className={`cce-assistant-chat-attachfiles__btn-delete`}
+											onClick={(event) => {
+												setLocalState(prevState => {
+													prevState.files.splice(index, 1);
+													return {
+														...prevState,
+													};
+												});
+											}}
+											title={"Delete"}
+											>✗</button>
+									</li>
+								);
+							})}
+								<li className="cce-assistant-chat-attachfiles__add">
+									<input
+										type="file"
+										name="cce-assistant-chat-new-attachment"
+										value=""
+										ref={newAttachmentRef}
+										onChange={async (event) => {
+											event.preventDefault();
+											const tmpNewFiles = [];
+											for(let i = 0; event.target.files.length > i; i ++){
+												tmpNewFiles.push(event.target.files[i]);
+											}
+											const newFiles = await Promise.all(tmpNewFiles.map(async (fileInfo)=>{
+												const base64 = await localFileUtils.readLocalFile(fileInfo);
+												return {
+													base64: base64,
+												};
+											}));
+											setLocalState(prevState => ({
+												...prevState,
+												files: prevState.files.concat(newFiles),
+											}));
+										}} />
+									<button
+										type="button"
+										onClick={(event) => {
+											newAttachmentRef.current.click();
+										}}>Add</button>
+									</li>
+							</ul>
+						</div>
 						<div className="px2-p">
 							<select name="model" className="px2-input" ref={selectModelRef}>
 								{Object.keys(props.models.chat).map((model, index) => {
