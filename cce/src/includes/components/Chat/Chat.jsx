@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect, useRef } from "react";
 // import { MainContext } from '../../context/MainContext';
 import ChatOperator from './includes/ChatOperator.js';
 import {marked} from 'marked';
+import {LocalFileUtils} from '../../../includes/utils/LocalFileUtils/LocalFileUtils.js';
 
 const Chat = React.memo((props) => {
 	// const globalState = useContext(MainContext);
@@ -11,10 +12,13 @@ const Chat = React.memo((props) => {
 		chatId: chatId,
 		isInitialized: false,
 		log: [],
+		files: [],
 	});
 	const chatInputRef = useRef(null);
 	const selectModelRef = useRef(null);
 	const sendButtonRef = useRef(null);
+
+	const localFileUtils = new LocalFileUtils();
 
 	const generateNewChatId = () => {
 		const now = new Date();
@@ -48,9 +52,10 @@ const Chat = React.memo((props) => {
 		if(!props.chatId){
 			setLocalState(prevState => ({
 				...prevState,
-				log: [],
 				chatId: chatId,
 				isInitialized: true,
+				log: [],
+				files: [],
 			}));
 
 		}else{
@@ -64,9 +69,10 @@ const Chat = React.memo((props) => {
 				}
 				setLocalState(prevState => ({
 					...prevState,
-					log: res.chatLog.messages,
 					chatId: chatId,
 					isInitialized: true,
+					log: res.chatLog.messages,
+					files: [],
 				}));
 			});
 		}
@@ -115,69 +121,99 @@ const Chat = React.memo((props) => {
 				</div>
 
 				<div className="cce-assistant-chat__input">
-					<form onSubmit={async (e) => {
-						e.preventDefault();
-						const inputElement = chatInputRef.current;
-						const buttonElement = sendButtonRef.current;
-						const selectModelElement = selectModelRef.current;
+					<form
+						onSubmit={async (e) => {
+							e.preventDefault();
+							const inputElement = chatInputRef.current;
+							const buttonElement = sendButtonRef.current;
+							const selectModelElement = selectModelRef.current;
 
-						const userMessage = inputElement.value.trim();
-						const model = selectModelElement.value.trim();
+							const userMessage = inputElement.value.trim();
+							const model = selectModelElement.value.trim();
 
-						if (userMessage) {
+							if (userMessage) {
 
-							const newMessage = {
-								content: userMessage,
-								role: "user",
-								datetime: new Date().toISOString(),
-							};
+								const newMessage = {
+									content: (localState.files.length ? [
+										{
+											type: "text",
+											text: userMessage,
+										},
+										...(localState.files.map(file => ({
+											type: "image_url",
+											image_url: {
+												url: file.base64,
+											},
+										}))),
+									] : userMessage),
+									role: "user",
+									datetime: new Date().toISOString(),
+								};
 
+								setLocalState(prevState => ({
+									...prevState,
+									log: [...prevState.log, newMessage],
+								}));
+
+								px2style.loading();
+								inputElement.setAttribute('disabled', true);
+								buttonElement.setAttribute('disabled', true);
+
+								const chatId = localState.chatId;
+								const chatOperator = new ChatOperator(chatId, props.cceAgent);
+								chatOperator.sendMessage(newMessage.content, model)
+									.then((answer) => {
+										return new Promise((resolve, reject) => {
+
+											setLocalState(prevState => ({
+												...prevState,
+												log: [
+													...prevState.log, {
+														content: answer.content,
+														role: "assistant",
+														datetime: new Date().toISOString(),
+													},
+												],
+												files: [],
+											}));
+											resolve();
+										});
+									})
+									.catch((error) => {
+										console.error(error);
+										alert('[ERROR] Failed to generate message.');
+									})
+									.finally(() => {
+										px2style.closeLoading();
+										inputElement.removeAttribute('disabled');
+										buttonElement.removeAttribute('disabled');
+
+										inputElement.value = '';
+										inputElement.focus();
+
+										props.onupdatechat({
+											currentChatId: localState.chatId,
+										});
+									});
+							}
+						}}
+						onDrop={async (event) => {
+							event.preventDefault();
+							const tmpNewFiles = [];
+							for(let i = 0; event.dataTransfer.files.length > i; i ++){
+								tmpNewFiles.push(event.dataTransfer.files[i]);
+							}
+							const newFiles = await Promise.all(tmpNewFiles.map(async (fileInfo)=>{
+								const base64 = await localFileUtils.readLocalFile(fileInfo);
+								return {
+									base64: base64,
+								};
+							}));
 							setLocalState(prevState => ({
 								...prevState,
-								log: [...prevState.log, newMessage],
+								files: prevState.files.concat(newFiles),
 							}));
-
-							px2style.loading();
-							inputElement.setAttribute('disabled', true);
-							buttonElement.setAttribute('disabled', true);
-
-							const chatId = localState.chatId;
-							const chatOperator = new ChatOperator(chatId, props.cceAgent);
-							chatOperator.sendMessage(userMessage, model)
-								.then((answer) => {
-									return new Promise((resolve, reject) => {
-
-										setLocalState(prevState => ({
-											...prevState,
-											log: [
-												...prevState.log, {
-													content: answer.content,
-													role: "assistant",
-													datetime: new Date().toISOString(),
-												},
-											],
-										}));
-										resolve();
-									});
-								})
-								.catch((error) => {
-									console.error(error);
-									alert('[ERROR] Failed to generate message.');
-								})
-								.finally(() => {
-									px2style.closeLoading();
-									inputElement.removeAttribute('disabled');
-									buttonElement.removeAttribute('disabled');
-
-									inputElement.value = '';
-									inputElement.focus();
-
-									props.onupdatechat({
-										currentChatId: localState.chatId,
-									});
-								});
-						}
-					}}>
+						}}>
 						<div className="px2-p">
 							<div className="px2-input-group px2-input-group--fluid">
 								<textarea
@@ -190,6 +226,17 @@ const Chat = React.memo((props) => {
 								<button type="submit" className="px2-btn px2-btn--primary" ref={sendButtonRef}>Send</button>
 							</div>
 						</div>
+						{localState.files.length ?
+							<div className="cce-assistant-chat-attachfiles">
+								<ul>
+								{localState.files.map((file, index) => {
+									return (
+										<li key={index}><img src={file.base64} alt="" /></li>
+									);
+								})}
+								</ul>
+							</div>
+						: <></>}
 						<div className="px2-p">
 							<select name="model" className="px2-input" ref={selectModelRef}>
 								{Object.keys(props.models.chat).map((model, index) => {

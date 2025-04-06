@@ -21,3 +21,27 @@
         }
     }
 }
+.cce-assistant-chat-attachfiles {
+    margin: 1em 0;
+    ul {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        li {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            img {
+                max-width: 40px;
+                max-height: 40px;
+                display: block;
+                border: 1px solid #888;
+                border-radius: 9px;
+                overflow: hidden;
+            }
+        }
+    }
+}

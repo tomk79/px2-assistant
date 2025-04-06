@@ -53,6 +53,10 @@ ANTHOROPIC_API_KEY="xx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
 ## 更新履歴 - Change log
 
+### tomk79/px2-assistant v0.1.1 (リリース日未定)
+
+- メッセージにファイルを添付できるようになった。
+
 ### tomk79/px2-assistant v0.1.0 (2025年4月5日)
 
 - Initial Release
