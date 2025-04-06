@@ -111,14 +111,8 @@ const Chat = React.memo((props) => {
 											__html: (markdownToHtml(message.content))
 										}}
 									/>
-									: message.content.map((content, index) => {
-										if(content.type == 'image_url'){
-											return <div key={index} className="cce-assistant-chat-attachfiles">
-												<ul>
-													<li><img src={content.image_url.url} alt="" /></li>
-												</ul>
-											</div>;
-										}else if(content.type == 'text'){
+									: <>
+										{message.content.filter(item => item.type=='text').map((content, index) => {
 											return <div
 												key={index}
 												className="cce-assistant-chat__message-content-body"
@@ -126,8 +120,20 @@ const Chat = React.memo((props) => {
 													__html: (markdownToHtml(content.text))
 												}}
 											/>;
+										})}
+										{message.content.filter(item => item.type=='image_url').length > 0 &&
+											<div className="cce-assistant-chat-attachfiles">
+												<ul>
+													{message.content.map((content, index) => {
+														if(content.type == 'image_url'){
+															return <li key={index}><img src={content.image_url.url} alt="" /></li>;
+														}
+														return;
+													})}
+												</ul>
+											</div>
 										}
-									})}
+									</>}
 								</div>
 							</div>
 						))
