@@ -16,7 +16,7 @@ class clearcache {
 			this.#cceAgent.pxCmd('/?PX=clearcache',
 				{
 					"progress": function(data, error){
-						console.log('--- progress:', data, error);
+						// console.log('--- progress:', data, error);
 					},
 				},
 				function(pxCmdStdOut, error){

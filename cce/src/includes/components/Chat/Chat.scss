@@ -33,7 +33,11 @@
             list-style-type: none;
             margin: 0;
             padding: 0;
-            overflow: hidden;
+            overflow: visible;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
             img {
                 max-width: 40px;
                 max-height: 40px;
@@ -43,5 +47,12 @@
                 overflow: hidden;
             }
         }
+    }
+
+    &__btn-delete {
+        position: absolute;
+        top: -8px;
+        right: -4px;
+        cursor: pointer;
     }
 }

@@ -12,11 +12,11 @@ class getConfig {
 			this.#cceAgent.pxCmd('/?PX=api.get.config',
 				{
 					"progress": function(data, error){
-						console.log('--- progress:', data, error);
+						// console.log('--- progress:', data, error);
 					},
 				},
 				function(pxCmdStdOut, error){
-					console.log('--- getConfig:', pxCmdStdOut, error);
+					// console.log('--- getConfig:', pxCmdStdOut, error);
 					if(error){
 						reject(error);
 						return;

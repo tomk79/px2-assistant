@@ -10,7 +10,7 @@ class whatTimeIsIt {
 	async run (args) {
 		return new Promise((resolve, reject) => {
 			const now = new Date().toISOString();
-			console.log('--- whatTimeIsIt:', now);
+			// console.log('--- whatTimeIsIt:', now);
 			resolve(now);
 		});
 

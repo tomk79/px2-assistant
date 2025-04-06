@@ -104,12 +104,30 @@ const Chat = React.memo((props) => {
 								</div>
 								<div className="cce-assistant-chat__message-content">
 									<span className="cce-assistant-chat__message-time">{message.datetime}</span>
-									<div
-										 className="cce-assistant-chat__message-content-body"
+									{typeof(message.content) == typeof('string')
+									? <div
+										className="cce-assistant-chat__message-content-body"
 										dangerouslySetInnerHTML={{ 
-											__html: (markdownToHtml(message.content[0].text || message.content))
+											__html: (markdownToHtml(message.content))
 										}}
 									/>
+									: message.content.map((content, index) => {
+										if(content.type == 'image_url'){
+											return <div key={index} className="cce-assistant-chat-attachfiles">
+												<ul>
+													<li><img src={content.image_url.url} alt="" /></li>
+												</ul>
+											</div>;
+										}else if(content.type == 'text'){
+											return <div
+												key={index}
+												className="cce-assistant-chat__message-content-body"
+												dangerouslySetInnerHTML={{ 
+													__html: (markdownToHtml(content.text))
+												}}
+											/>;
+										}
+									})}
 								</div>
 							</div>
 						))
@@ -231,7 +249,22 @@ const Chat = React.memo((props) => {
 								<ul>
 								{localState.files.map((file, index) => {
 									return (
-										<li key={index}><img src={file.base64} alt="" /></li>
+										<li key={index}>
+											<img src={file.base64} alt="" />
+											<button
+												type="button"
+												className={`cce-assistant-chat-attachfiles__btn-delete`}
+												onClick={(event) => {
+													setLocalState(prevState => {
+														prevState.files.splice(index, 1);
+														return {
+															...prevState,
+														};
+													});
+												}}
+												title={"Delete"}
+												>✗</button>
+										</li>
 									);
 								})}
 								</ul>
