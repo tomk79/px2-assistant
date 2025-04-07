@@ -35,7 +35,7 @@ composer require tomk79/px2-assistant
 	);
 ```
 
-OpenAI、 Google、 Anthoropic のモデルを使用するには、次の環境変数にアクセスキーをセットしてください。
+OpenAI、 Google、 Anthropic のモデルを使用するには、次の環境変数にアクセスキーをセットしてください。
 
 ```ini
 # .env
@@ -47,8 +47,8 @@ OPENAI_ORG_ID="org-xxxxxxxxxxxxxx" # optional
 # Google Gemini
 GEMINI_API_KEY="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
-# Anthoropic Claude
-ANTHOROPIC_API_KEY="xx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+# Anthropic Claude
+ANTHROPIC_API_KEY="xx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ```
 
 ## 更新履歴 - Change log
@@ -56,6 +56,7 @@ ANTHOROPIC_API_KEY="xx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ### tomk79/px2-assistant v0.1.1 (リリース日未定)
 
 - メッセージにファイルを添付できるようになった。
+- 誤植修正: `ANTHOROPIC_API_KEY` -> `ANTHROPIC_API_KEY`
 
 ### tomk79/px2-assistant v0.1.0 (2025年4月5日)
 

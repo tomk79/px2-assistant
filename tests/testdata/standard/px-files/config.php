@@ -388,11 +388,11 @@ return call_user_func( function(){
 							"label" => "Google gemini-2.0-flash",
 							"api_key" => "GEMINI_API_KEY",
 						),
-						"anthoropic-claude-3-5-sonnet-20241022" => array(
+						"anthropic-claude-3-5-sonnet-20241022" => array(
 							"url" => "https://api.anthropic.com/v1/messages",
 							"model" => "claude-3-5-sonnet-20241022",
-							"label" => "Anthoropic claude-3-5-sonnet-20241022",
-							"api_key" => "ANTHOROPIC_API_KEY",
+							"label" => "Anthropic claude-3-5-sonnet-20241022",
+							"api_key" => "ANTHROPIC_API_KEY",
 							"anthropic_version" => "2023-06-01",
 						),
 						"ollama-deepseek-r1:14b" => array(

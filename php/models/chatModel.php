@@ -81,9 +81,9 @@ class chatModel {
 				array_push($headers, 'Authorization: Bearer '.($api_key));
 			}
 		}elseif( preg_match('/^https\:\/\/api\.anthropic\.com/', $selectedModel->url) ){
-			// Anthoropic API
-			$api_type = 'anthoropic';
-			$api_key = $_ENV[$selectedModel->api_key ?? 'ANTHOROPIC_API_KEY'] ?? $selectedModel->api_key ?? null;
+			// Anthropic API
+			$api_type = 'anthropic';
+			$api_key = $_ENV[$selectedModel->api_key ?? 'ANTHROPIC_API_KEY'] ?? $selectedModel->api_key ?? null;
 			if( strlen($api_key ?? '') ){
 				array_push($headers, 'x-api-key: '.($api_key));
 			}
@@ -101,19 +101,19 @@ class chatModel {
 						// NOTE: `system` や `tool` などの値は、Gemma3:4B, Mistral:7B など、一部のモデル(Ollama？)で扱えない場合があるので、 `user` に置換する。
 						// NOTE: 逆に、OpenAI の API では、`system` や `tool` を正しく与えないとエラーを返してくる。
 				}
-				if($api_type == 'anthoropic'){
+				if($api_type == 'anthropic'){
 					if( $promptMessage->tool_calls ?? null ){
 						unset($promptMessage->tool_calls);
-							// NOTE: Anthoropic API では、`tool_calls` を与えるとエラーになる。
+							// NOTE: Anthropic API では、`tool_calls` を与えるとエラーになる。
 					}
 					if( $promptMessage->tool_call_id ?? null ){
 						unset($promptMessage->tool_call_id);
-							// NOTE: Anthoropic API では、`tool_call_id` を与えるとエラーになる。
+							// NOTE: Anthropic API では、`tool_call_id` を与えるとエラーになる。
 					}
 					if( is_array($promptMessage->content) ){
 						foreach($promptMessage->content as $promptMessageContent){
 							if( $promptMessageContent->type == 'image_url' ){
-								// NOTE: Anthoropic API では、`image_url` は受け取れない。
+								// NOTE: Anthropic API では、`image_url` は受け取れない。
 								$promptMessageContent->type = 'image';
 								preg_match('/^data\:([a-zA-Z0-9\-\_]+\/[a-zA-Z0-9\-\_]+)\;([a-zA-Z0-9\-\_]+)\,(.*)$/', $promptMessageContent->image_url->url ?? '', $tmpMatched);
 								$promptMessageContent->source = (object) array(
@@ -157,7 +157,7 @@ class chatModel {
 
 		// --------------------------------------
 		// モデルの違いによる互換性の問題を吸収する
-		if($api_type == 'anthoropic'){
+		if($api_type == 'anthropic'){
 			$result->choices = array();
 			if($result->type == "error"){
 				array_push($result->choices, (object) array(
