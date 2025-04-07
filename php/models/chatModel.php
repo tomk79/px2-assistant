@@ -92,6 +92,29 @@ class chatModel {
 			}
 		}
 
+		// NOTE: 内部間利用の値を削除する
+		foreach($promptMessages as $promptMessage){
+			if( is_array($promptMessage->content) ){
+				foreach($promptMessage->content as $promptMessageContentIdx => $promptMessageContent){
+					if($promptMessageContent->mimeType ?? null){
+						// NOTE: 画像以外の MIME タイプは削除する
+						// TODO: 画像以外の場合は、ファイルとして添付できるようにしたい。
+						if(!preg_match('/^image\//', $promptMessageContent->mimeType)){
+							unset($promptMessage->content[$promptMessageContentIdx]);
+							continue;
+						}
+						// NOTE: SVGも読めないので削除
+						if(preg_match('/^image\/svg/', $promptMessageContent->mimeType)){
+							unset($promptMessage->content[$promptMessageContentIdx]);
+							continue;
+						}
+					}
+					unset($promptMessageContent->name);
+					unset($promptMessageContent->mimeType);
+				}
+			}
+		}
+
 		// --------------------------------------
 		// モデルの違いによる互換性の問題を吸収する
 		if($api_type != 'openai'){

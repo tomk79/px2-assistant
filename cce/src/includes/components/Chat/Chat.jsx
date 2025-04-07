@@ -164,12 +164,16 @@ const Chat = React.memo((props) => {
 											type: "text",
 											text: userMessage,
 										},
-										...(localState.files.map(file => ({
-											type: "image_url",
-											image_url: {
-												url: file.base64,
-											},
-										}))),
+										...(localState.files.map(file => {
+											return {
+												name: file.name,
+												mimeType: file.mimeType,
+												type: "image_url",
+												image_url: {
+													url: file.base64,
+												},
+											};
+										})),
 									] : userMessage),
 									role: "user",
 									datetime: new Date().toISOString(),
@@ -231,6 +235,8 @@ const Chat = React.memo((props) => {
 							const newFiles = await Promise.all(tmpNewFiles.map(async (fileInfo)=>{
 								const base64 = await localFileUtils.readLocalFile(fileInfo);
 								return {
+									name: fileInfo.name,
+									mimeType: fileInfo.type,
 									base64: base64,
 								};
 							}));
@@ -288,6 +294,8 @@ const Chat = React.memo((props) => {
 											const newFiles = await Promise.all(tmpNewFiles.map(async (fileInfo)=>{
 												const base64 = await localFileUtils.readLocalFile(fileInfo);
 												return {
+													name: fileInfo.name,
+													mimeType: fileInfo.type,
 													base64: base64,
 												};
 											}));
