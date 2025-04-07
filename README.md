@@ -53,9 +53,9 @@ ANTHROPIC_API_KEY="xx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
 ## 更新履歴 - Change log
 
-### tomk79/px2-assistant v0.1.1 (リリース日未定)
+### tomk79/px2-assistant v0.1.1 (2025年4月7日)
 
-- メッセージにファイルを添付できるようになった。
+- メッセージに画像ファイルを添付できるようになった。
 - 誤植修正: `ANTHOROPIC_API_KEY` -> `ANTHROPIC_API_KEY`
 
 ### tomk79/px2-assistant v0.1.0 (2025年4月5日)
