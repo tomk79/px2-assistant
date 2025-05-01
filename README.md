@@ -53,6 +53,10 @@ ANTHROPIC_API_KEY="xx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
 ## 更新履歴 - Change log
 
+### tomk79/px2-assistant v0.2.0 (リリース日未定)
+
+- configにAPIキーを直接設定できないようになった。
+
 ### tomk79/px2-assistant v0.1.1 (2025年4月7日)
 
 - メッセージに画像ファイルを添付できるようになった。

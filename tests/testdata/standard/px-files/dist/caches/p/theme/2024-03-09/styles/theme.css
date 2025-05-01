@@ -10,7 +10,9 @@
   --px2-background-color: #f9f9f9;
   --px2-border-color: #f0f0f0;
 }
-html, body {
+
+html,
+body {
   margin: 0;
   padding: 0;
   font-size: medium;
@@ -19,13 +21,18 @@ html, body {
   color: #333;
   background-color: #eee;
 }
+
 .current {
   font-weight: bold;
 }
-img, svg, video {
+
+img,
+svg,
+video {
   max-width: 100%;
   height: auto;
 }
+
 pre {
   border: 1px solid #e1e1e8;
   background-color: #f7f7f9;
@@ -36,53 +43,91 @@ pre > code {
   padding: 1em;
   overflow: auto;
 }
+
 code {
   color: #d44950;
 }
-h1, h2, h3, h4, h5, h6 {
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: bold;
 }
-h1 a, h1 code, h2 a, h2 code, h3 a, h3 code, h4 a, h4 code, h5 a, h5 code, h6 a, h6 code {
+h1 a,
+h1 code,
+h2 a,
+h2 code,
+h3 a,
+h3 code,
+h4 a,
+h4 code,
+h5 a,
+h5 code,
+h6 a,
+h6 code {
   color: inherit;
 }
+
 h1 {
   font-size: 36px;
 }
+
 a {
   color: var(--theme-link-color);
 }
+
 a:hover {
   opacity: 0.7;
 }
+
 p, ul, ol, dl {
   margin: 1em 0;
 }
+
 dl dd {
   margin-left: 2em;
 }
+
 p, li, dt, dd {
   line-height: 1.6;
 }
+
 .px2-h2 h2, h2 {
   font-size: 30px;
 }
+
 .px2-h3 h3, h3 {
   font-size: 26px;
 }
+
 .px2-h4 h4, h4 {
   font-size: 23px;
 }
+
 .px2-h5 h5, h5 {
   font-size: 20px;
 }
+
 .px2-h6 h6, h6 {
   font-size: 16px;
 }
-.px2-h2 .px2-linklist ul.px2-horizontal-list > li > a, .px2-h3 .px2-linklist ul.px2-horizontal-list > li > a, .px2-h4 .px2-linklist ul.px2-horizontal-list > li > a, .px2-h5 .px2-linklist ul.px2-horizontal-list > li > a, .px2-h6 .px2-linklist ul.px2-horizontal-list > li > a {
+
+.px2-h2 .px2-linklist ul.px2-horizontal-list > li > a,
+.px2-h3 .px2-linklist ul.px2-horizontal-list > li > a,
+.px2-h4 .px2-linklist ul.px2-horizontal-list > li > a,
+.px2-h5 .px2-linklist ul.px2-horizontal-list > li > a,
+.px2-h6 .px2-linklist ul.px2-horizontal-list > li > a {
   color: var(--theme-keycolor);
   font-weight: normal;
 }
-.px2-h2 .px2-linklist ul.px2-horizontal-list > li > a::before, .px2-h3 .px2-linklist ul.px2-horizontal-list > li > a::before, .px2-h4 .px2-linklist ul.px2-horizontal-list > li > a::before, .px2-h5 .px2-linklist ul.px2-horizontal-list > li > a::before, .px2-h6 .px2-linklist ul.px2-horizontal-list > li > a::before {
+.px2-h2 .px2-linklist ul.px2-horizontal-list > li > a::before,
+.px2-h3 .px2-linklist ul.px2-horizontal-list > li > a::before,
+.px2-h4 .px2-linklist ul.px2-horizontal-list > li > a::before,
+.px2-h5 .px2-linklist ul.px2-horizontal-list > li > a::before,
+.px2-h6 .px2-linklist ul.px2-horizontal-list > li > a::before {
   content: "";
   width: 0;
   height: 0;
@@ -94,9 +139,11 @@ p, li, dt, dd {
   border-top-color: transparent;
   border-bottom-color: transparent;
 }
+
 .px2-linklist a {
   text-decoration: none;
 }
+
 .px2-modal .px2-modal__body-inner > .px2-form-input-list {
   margin-left: -20px;
   margin-right: -20px;
@@ -109,21 +156,36 @@ p, li, dt, dd {
   padding-left: 20px;
   padding-right: 20px;
 }
-.px2-section.px2-section--framed .px2-section__heading *, .px2-section.px2-section--framed .px2-section__heading .px2-h2, .px2-section.px2-section--framed .px2-section__heading h2, .px2-section.px2-section--framed .px2-section__heading .px2-h3, .px2-section.px2-section--framed .px2-section__heading h3, .px2-section.px2-section--framed .px2-section__heading .px2-h4, .px2-section.px2-section--framed .px2-section__heading h4, .px2-section.px2-section--framed .px2-section__heading .px2-h5, .px2-section.px2-section--framed .px2-section__heading h5, .px2-section.px2-section--framed .px2-section__heading .px2-h6, .px2-section.px2-section--framed .px2-section__heading h6 {
+
+.px2-section.px2-section--framed .px2-section__heading *,
+.px2-section.px2-section--framed .px2-section__heading .px2-h2, .px2-section.px2-section--framed .px2-section__heading h2,
+.px2-section.px2-section--framed .px2-section__heading .px2-h3, .px2-section.px2-section--framed .px2-section__heading h3,
+.px2-section.px2-section--framed .px2-section__heading .px2-h4, .px2-section.px2-section--framed .px2-section__heading h4,
+.px2-section.px2-section--framed .px2-section__heading .px2-h5, .px2-section.px2-section--framed .px2-section__heading h5,
+.px2-section.px2-section--framed .px2-section__heading .px2-h6, .px2-section.px2-section--framed .px2-section__heading h6 {
   font-size: 20px;
 }
-.px2-section.px2-section--framed .px2-section__body > *:first-child, .px2-section.px2-section--framed .px2-section__body > *:first-child > *:first-child {
+.px2-section.px2-section--framed .px2-section__body > *:first-child,
+.px2-section.px2-section--framed .px2-section__body > *:first-child > *:first-child {
   margin-top: 0;
 }
-.px2-section.px2-section--framed .px2-section__body > *:last-child, .px2-section.px2-section--framed .px2-section__body > *:last-child > *:last-child {
+.px2-section.px2-section--framed .px2-section__body > *:last-child,
+.px2-section.px2-section--framed .px2-section__body > *:last-child > *:last-child {
   margin-bottom: 0;
 }
-.px2-notice .px2-h2 h2, .px2-notice h2, .px2-notice .px2-h3 h3, .px2-notice h3, .px2-notice .px2-h4 h4, .px2-notice h4, .px2-notice .px2-h5 h5, .px2-notice h5, .px2-notice .px2-h6 h6, .px2-notice h6 {
+
+.px2-notice .px2-h2 h2, .px2-notice h2,
+.px2-notice .px2-h3 h3, .px2-notice h3,
+.px2-notice .px2-h4 h4, .px2-notice h4,
+.px2-notice .px2-h5 h5, .px2-notice h5,
+.px2-notice .px2-h6 h6, .px2-notice h6 {
   font-size: 20px;
 }
-.px2-notice > :first-child, .px2-notice > :first-child > :first-child {
+.px2-notice > :first-child,
+.px2-notice > :first-child > :first-child {
   margin-top: 0;
 }
-.px2-notice > :last-child, .px2-notice > :last-child > :last-child {
+.px2-notice > :last-child,
+.px2-notice > :last-child > :last-child {
   margin-bottom: 0;
 }

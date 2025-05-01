@@ -65,8 +65,8 @@ class chatModel {
 		if( preg_match('/^https\:\/\/api\.openai\.com/', $selectedModel->url) ){
 			// OpenAI API
 			$api_type = 'openai';
-			$api_key = $_ENV[$selectedModel->api_key ?? 'OPENAI_API_KEY'] ?? $selectedModel->api_key ?? null;
-			$openai_org_id = $_ENV[$selectedModel->org_id ?? 'OPENAI_ORG_ID'] ?? $selectedModel->org_id ?? null;
+			$api_key = $_ENV[$selectedModel->api_key ?? 'OPENAI_API_KEY'] ?? null;
+			$openai_org_id = $_ENV[$selectedModel->org_id ?? 'OPENAI_ORG_ID'] ?? null;
 			if( strlen($api_key ?? '') ){
 				array_push($headers, 'Authorization: Bearer '.($api_key));
 			}
@@ -76,14 +76,14 @@ class chatModel {
 		}elseif( preg_match('/^https\:\/\/generativelanguage\.googleapis\.com\/[a-zA-Z0-9]+\/openai\//', $selectedModel->url) ){
 			// Google Gemini API (OpenAI compatible)
 			$api_type = 'openai';
-			$api_key = $_ENV[$selectedModel->api_key ?? 'GEMINI_API_KEY'] ?? $selectedModel->api_key ?? null;
+			$api_key = $_ENV[$selectedModel->api_key ?? 'GEMINI_API_KEY'] ?? null;
 			if( strlen($api_key ?? '') ){
 				array_push($headers, 'Authorization: Bearer '.($api_key));
 			}
 		}elseif( preg_match('/^https\:\/\/api\.anthropic\.com/', $selectedModel->url) ){
 			// Anthropic API
 			$api_type = 'anthropic';
-			$api_key = $_ENV[$selectedModel->api_key ?? 'ANTHROPIC_API_KEY'] ?? $selectedModel->api_key ?? null;
+			$api_key = $_ENV[$selectedModel->api_key ?? 'ANTHROPIC_API_KEY'] ?? null;
 			if( strlen($api_key ?? '') ){
 				array_push($headers, 'x-api-key: '.($api_key));
 			}
