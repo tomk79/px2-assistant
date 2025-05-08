@@ -53,7 +53,7 @@ ANTHROPIC_API_KEY="xx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
 ## 更新履歴 - Change log
 
-### tomk79/px2-assistant v0.2.0 (リリース日未定)
+### tomk79/px2-assistant v0.2.0 (2025年5月9日)
 
 - configにAPIキーを直接設定できないようになった。
 
